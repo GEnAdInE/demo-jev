@@ -29,6 +29,10 @@ uvicorn app:app --reload
 
 Open http://127.0.0.1:8000.
 
+## Presentation
+
+See [PRESENTATION.md](PRESENTATION.md) for the Jev vs traditional LLM talk track.
+
 ## Files
 
 | File | Role |
