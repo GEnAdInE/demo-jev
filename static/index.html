@@ -1,0 +1,1753 @@
+<!doctype html>
+<html lang="en" data-theme="dark">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>MaybeCovered Insurance - Claims Desk</title>
+<script>
+try {
+  document.documentElement.dataset.theme = localStorage.getItem("mc-theme") === "light" ? "light" : "dark";
+  document.documentElement.lang = localStorage.getItem("mc-lang") === "fr" ? "fr" : "en";
+} catch (e) {}
+</script>
+<style>
+/* ---------- tokens: every colour lives here ---------- */
+:root,:root[data-theme="dark"]{
+  color-scheme:dark;
+  --bg:#04050b;
+  --text:#eef1fa;
+  --muted:#c2c9dc;
+  --ion:#6ee7f9;
+  --plasma:#8b7bff;
+  --red:#ff5a6e;
+  --green:#3df0a8;
+  --amber:#ffc65c;
+  --on-accent:#050611;
+  --spectrum:linear-gradient(100deg,#8b7bff 0%,#6ee7f9 62%,#b8fff0 100%);
+  --orb:conic-gradient(from 0deg,#8b7bff,#6ee7f9,#b8fff0,#8b7bff);
+  --fill-red:linear-gradient(90deg,#ff9a6b,#ff5a6e);
+  --fill-gray:linear-gradient(90deg,#5d6880,#8a95ad);
+  --cell-approve:linear-gradient(160deg,#8b7bff,#6ee7f9);
+  --cell-deny:linear-gradient(160deg,#ff9a6b,#ff5a6e);
+  --cell-human:linear-gradient(160deg,#5d6880,#9aa4bb);
+  --num:linear-gradient(180deg,#fff 40%,#b9c4f0);
+  --num-hero:linear-gradient(180deg,#fff 30%,#9fe9f7);
+  --num-type:linear-gradient(180deg,#fff 35%,#a9b8ff);
+  --num-red:linear-gradient(180deg,#fff 35%,#ffb3bd);
+  --surface:rgba(16,20,40,.74);
+  --surface-hi:rgba(28,34,64,.72);
+  --sheet:linear-gradient(180deg,rgba(20,25,50,.8),rgba(10,13,28,.8));
+  --sheet-edge:linear-gradient(140deg,rgba(139,123,255,.5),transparent 28%,transparent 72%,rgba(110,231,249,.3));
+  --gerald-bg:repeating-linear-gradient(135deg,rgba(255,198,92,.06) 0 .9rem,transparent .9rem 1.8rem),linear-gradient(180deg,rgba(28,24,30,.8),rgba(14,12,20,.8));
+  --nav-bg:rgba(10,13,26,.8);
+  --input-bg:rgba(2,3,10,.55);
+  --well:rgba(2,3,10,.4);
+  --line:rgba(160,175,255,.14);
+  --line-hi:rgba(160,175,255,.3);
+  --row-line:rgba(255,255,255,.06);
+  --track:rgba(255,255,255,.07);
+  --track-inset:inset 0 1px 2px rgba(0,0,0,.5);
+  --hover:rgba(255,255,255,.05);
+  --hi-inset:inset 0 1px 0 rgba(255,255,255,.06);
+  --shadow:0 30px 60px -32px rgba(0,0,0,.95);
+  --shadow-sm:0 20px 40px -24px rgba(0,0,0,1);
+  --glow:rgba(110,231,249,.7);
+  --glow-soft:rgba(110,231,249,.14);
+  --ion-soft:rgba(110,231,249,.08);
+  --ion-line:rgba(110,231,249,.3);
+  --plasma-soft:rgba(139,123,255,.18);
+  --plasma-line:rgba(139,123,255,.55);
+  --plasma-glow:rgba(139,123,255,.8);
+  --sel:rgba(139,123,255,.2);
+  --red-soft:rgba(255,90,110,.12);
+  --red-line:rgba(255,90,110,.5);
+  --red-text:#ffc7cd;
+  --red-glow:rgba(255,90,110,.45);
+  --green-soft:rgba(61,240,168,.08);
+  --green-line:rgba(61,240,168,.45);
+  --green-text:#c4ffe6;
+  --green-glow:rgba(61,240,168,.4);
+  --green-ring:rgba(61,240,168,.7);
+  --amber-soft:rgba(255,198,92,.14);
+  --amber-line:rgba(255,198,92,.5);
+  --amber-text:#ffe6b8;
+  --btn-hi:rgba(255,255,255,.55);
+  --sheen:rgba(255,255,255,.6);
+  --sheen-alt:rgba(160,175,255,.2);
+  --sweep:rgba(190,245,255,.22);
+  --aurora-op:.75;
+  --aurora-1:rgba(139,123,255,.30);
+  --aurora-2:rgba(110,231,249,.18);
+  --aurora-3:rgba(64,120,255,.16);
+  --dot:rgba(200,210,255,.12);
+  --scroll:rgba(160,175,255,.2);
+  --scroll-hi:rgba(160,175,255,.35);
+  --rawbody:linear-gradient(180deg,rgba(14,17,34,.94),rgba(6,8,18,.94));
+  --code-bg:#03040a;
+  --code-head:linear-gradient(180deg,rgba(255,255,255,.055),rgba(255,255,255,.015));
+  --code-text:#c9d1e6;
+  --code-glow:rgba(139,123,255,.06);
+  --jk:#a9b8ff;--js:#8ef0c0;--jn:#ffc27a;--jb:#ff8fc6;
+  --photo-bg:#000;
+  --scan-grid:rgba(110,231,249,.13);
+  --scan-tint:rgba(4,10,24,.25);
+  --scan-beam:linear-gradient(180deg,transparent 0 62%,rgba(110,231,249,.1) 86%,rgba(110,231,249,.6) 99.2%,#d4fbff 100%);
+  --bbox-fill:rgba(255,90,110,.13);
+  --bbox-shadow:0 0 0 1px rgba(0,0,0,.45),0 0 28px rgba(255,90,110,.65);
+  --label-text:#14060a;
+  --mk:#fff;
+  --mk-glow:rgba(255,255,255,.8);
+  --rail:linear-gradient(90deg,rgba(110,231,249,.4),rgba(255,198,92,.5),rgba(255,90,110,.65));
+  --cell-empty:rgba(255,255,255,.05);
+  --cell-edge:rgba(255,255,255,.06);
+  --pending-hi:#fff;
+}
+:root[data-theme="light"]{
+  color-scheme:light;
+  --bg:#f3f5fb;
+  --text:#0e1428;
+  --muted:#465069;
+  --ion:#0a7f9c;
+  --plasma:#5a48d6;
+  --red:#cf2c47;
+  --green:#08875c;
+  --amber:#9c620a;
+  --on-accent:#ffffff;
+  --spectrum:linear-gradient(100deg,#5a48d6 0%,#0a7f9c 62%,#0b8d80 100%);
+  --orb:conic-gradient(from 0deg,#5a48d6,#0a7f9c,#2bc4b2,#5a48d6);
+  --fill-red:linear-gradient(90deg,#ee8a4e,#cf2c47);
+  --fill-gray:linear-gradient(90deg,#a5adc0,#7e88a1);
+  --cell-approve:linear-gradient(160deg,#5a48d6,#0a7f9c);
+  --cell-deny:linear-gradient(160deg,#ee8a4e,#cf2c47);
+  --cell-human:linear-gradient(160deg,#9aa3b8,#6f7a94);
+  --num:linear-gradient(180deg,#0e1428 40%,#3b4778);
+  --num-hero:linear-gradient(180deg,#0e1428 30%,#0a6d88);
+  --num-type:linear-gradient(180deg,#0e1428 35%,#5a48d6);
+  --num-red:linear-gradient(180deg,#0e1428 15%,#c42a44);
+  --surface:rgba(255,255,255,.84);
+  --surface-hi:rgba(255,255,255,.96);
+  --sheet:linear-gradient(180deg,rgba(255,255,255,.94),rgba(250,251,255,.9));
+  --sheet-edge:linear-gradient(140deg,rgba(90,72,214,.35),transparent 28%,transparent 72%,rgba(10,127,156,.3));
+  --gerald-bg:repeating-linear-gradient(135deg,rgba(156,98,10,.06) 0 .9rem,transparent .9rem 1.8rem),linear-gradient(180deg,rgba(255,252,244,.95),rgba(255,249,236,.92));
+  --nav-bg:rgba(255,255,255,.88);
+  --input-bg:#ffffff;
+  --well:rgba(232,236,247,.7);
+  --line:rgba(30,45,110,.12);
+  --line-hi:rgba(30,45,110,.22);
+  --row-line:rgba(20,30,80,.07);
+  --track:rgba(20,30,80,.08);
+  --track-inset:inset 0 1px 2px rgba(20,30,80,.12);
+  --hover:rgba(20,30,80,.05);
+  --hi-inset:inset 0 1px 0 rgba(255,255,255,1);
+  --shadow:0 24px 50px -30px rgba(30,40,100,.3);
+  --shadow-sm:0 14px 30px -20px rgba(30,40,100,.28);
+  --glow:rgba(10,127,156,.35);
+  --glow-soft:rgba(10,127,156,.14);
+  --ion-soft:rgba(10,127,156,.08);
+  --ion-line:rgba(10,127,156,.35);
+  --plasma-soft:rgba(90,72,214,.1);
+  --plasma-line:rgba(90,72,214,.45);
+  --plasma-glow:rgba(90,72,214,.35);
+  --sel:rgba(90,72,214,.12);
+  --red-soft:rgba(207,44,71,.08);
+  --red-line:rgba(207,44,71,.45);
+  --red-text:#9c1830;
+  --red-glow:rgba(207,44,71,.22);
+  --green-soft:rgba(8,135,92,.08);
+  --green-line:rgba(8,135,92,.45);
+  --green-text:#066347;
+  --green-glow:rgba(8,135,92,.22);
+  --green-ring:rgba(8,135,92,.5);
+  --amber-soft:rgba(156,98,10,.09);
+  --amber-line:rgba(156,98,10,.45);
+  --amber-text:#6e4405;
+  --btn-hi:rgba(255,255,255,.35);
+  --sheen:rgba(255,255,255,.5);
+  --sheen-alt:rgba(90,72,214,.12);
+  --sweep:rgba(10,127,156,.14);
+  --aurora-op:1;
+  --aurora-1:rgba(90,72,214,.12);
+  --aurora-2:rgba(10,127,156,.11);
+  --aurora-3:rgba(64,120,255,.08);
+  --dot:rgba(30,45,110,.1);
+  --scroll:rgba(30,45,110,.2);
+  --scroll-hi:rgba(30,45,110,.35);
+  --rawbody:linear-gradient(180deg,rgba(255,255,255,.96),rgba(246,248,253,.96));
+  --code-bg:#fbfcff;
+  --code-head:linear-gradient(180deg,#f2f4fa,#e9ecf6);
+  --code-text:#1e2542;
+  --code-glow:rgba(90,72,214,.04);
+  --jk:#4338ca;--js:#047857;--jn:#a64b05;--jb:#be185d;
+  --photo-bg:#000;
+  --scan-grid:rgba(110,231,249,.25);
+  --scan-tint:rgba(255,255,255,.12);
+  --scan-beam:linear-gradient(180deg,transparent 0 62%,rgba(110,231,249,.12) 86%,rgba(110,231,249,.7) 99.2%,#ffffff 100%);
+  --bbox-fill:rgba(207,44,71,.14);
+  --bbox-shadow:0 0 0 1px rgba(255,255,255,.75),0 0 20px rgba(207,44,71,.5);
+  --label-text:#ffffff;
+  --mk:#0e1428;
+  --mk-glow:rgba(14,20,40,.35);
+  --rail:linear-gradient(90deg,rgba(10,127,156,.45),rgba(156,98,10,.45),rgba(207,44,71,.6));
+  --cell-empty:rgba(20,30,80,.06);
+  --cell-edge:rgba(20,30,80,.08);
+  --pending-hi:#0e1428;
+}
+:root{
+  --display:"Segoe UI Variable Display","Segoe UI",system-ui,-apple-system,"SF Pro Display",Roboto,"Helvetica Neue",Arial,sans-serif;
+  --sans:"Segoe UI Variable Text","Segoe UI",system-ui,-apple-system,Roboto,"Helvetica Neue",Arial,sans-serif;
+  --mono:"Cascadia Code","Cascadia Mono",ui-monospace,"SF Mono",Consolas,Menlo,monospace;
+  --out:cubic-bezier(.16,1,.3,1);
+  --spring:cubic-bezier(.22,1.3,.36,1);
+}
+::view-transition-old(root),::view-transition-new(root){animation-duration:.5s;animation-timing-function:ease}
+
+*{box-sizing:border-box}
+html{font-size:clamp(17px,.94vw,26px)}
+body{
+  margin:0;color:var(--text);font-family:var(--sans);line-height:1.5;
+  font-optical-sizing:auto;-webkit-font-smoothing:antialiased;
+  padding:0 clamp(16px,3vw,80px) 64px;
+  background:var(--bg);
+}
+[hidden]{display:none!important}
+button{font:inherit;cursor:pointer;color:inherit}
+:focus-visible{outline:2px solid var(--ion);outline-offset:3px}
+.mono{font-family:var(--mono)}
+.muted{color:var(--muted)}
+::-webkit-scrollbar{width:10px;height:10px}
+::-webkit-scrollbar-track{background:transparent}
+::-webkit-scrollbar-thumb{background:var(--scroll);border-radius:99px;border:2px solid transparent;background-clip:padding-box}
+::-webkit-scrollbar-thumb:hover{background-color:var(--scroll-hi)}
+
+/* ambient field: three soft light sources drifting, plus a dot lattice. transform-only animation. */
+.aurora{position:fixed;inset:0;z-index:-1;pointer-events:none;overflow:hidden;opacity:var(--aurora-op);transition:opacity 1.2s ease}
+body.streaming .aurora{opacity:1}
+.aurora i{position:absolute;width:75vmax;height:75vmax;border-radius:50%;will-change:transform}
+.aurora i:nth-child(1){left:-25vmax;top:-40vmax;background:radial-gradient(closest-side,var(--aurora-1),transparent);animation:drift1 38s ease-in-out infinite alternate}
+.aurora i:nth-child(2){right:-30vmax;top:-35vmax;background:radial-gradient(closest-side,var(--aurora-2),transparent);animation:drift2 46s ease-in-out infinite alternate}
+.aurora i:nth-child(3){left:20vmax;bottom:-55vmax;background:radial-gradient(closest-side,var(--aurora-3),transparent);animation:drift3 54s ease-in-out infinite alternate}
+.aurora::after{content:"";position:absolute;inset:0;background-image:radial-gradient(var(--dot) 1px,transparent 1.3px);background-size:1.7rem 1.7rem;-webkit-mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 20%,transparent 75%);mask-image:radial-gradient(ellipse 90% 70% at 50% 0%,#000 20%,transparent 75%)}
+@keyframes drift1{to{transform:translate3d(18vmax,14vmax,0) scale(1.15)}}
+@keyframes drift2{to{transform:translate3d(-16vmax,18vmax,0) scale(.9)}}
+@keyframes drift3{to{transform:translate3d(-12vmax,-10vmax,0) scale(1.2)}}
+
+/* header: one compact band */
+header{position:relative;display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.7rem 2rem;padding:1rem 0 .9rem;margin-bottom:.9rem}
+header::before{content:"";position:absolute;left:0;right:0;bottom:0;height:1px;background:linear-gradient(90deg,transparent,var(--line-hi) 20%,var(--line-hi) 80%,transparent)}
+header::after{content:"";position:absolute;left:0;bottom:-1px;width:18%;height:3px;border-radius:99px;background:linear-gradient(90deg,transparent,var(--ion),transparent);animation:signal 7s var(--out) infinite;opacity:.8}
+@keyframes signal{0%{transform:translateX(-100%)}60%,100%{transform:translateX(560%)}}
+.brand{display:flex;flex-wrap:wrap;align-items:baseline;gap:.2rem 1.1rem}
+.brand h1{font-family:var(--display);font-size:clamp(1.6rem,2.2vw,2.6rem);margin:0;line-height:1;font-weight:650;letter-spacing:-.04em;background:var(--num);-webkit-background-clip:text;background-clip:text;color:transparent}
+.brand p{margin:0;font-family:var(--display);font-size:1.12rem;letter-spacing:-.01em}
+.brand p b{font-weight:600;background:var(--spectrum);-webkit-background-clip:text;background-clip:text;color:transparent}
+.hright{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:.7rem 1.4rem}
+.powered{display:flex;flex-direction:column;align-items:flex-end;gap:.25rem;text-align:right;max-width:44ch;font-size:.88rem;color:var(--muted)}
+.mark{display:inline-flex;align-items:center;gap:.6rem;padding:.3rem .95rem .3rem .45rem;border:1px solid var(--line-hi);border-radius:99px;background:var(--surface);font-size:.92rem;font-weight:600;color:var(--text);box-shadow:0 0 30px -12px var(--glow)}
+.mark i{position:relative;width:1.1rem;height:1.1rem;border-radius:50%;background:var(--orb);animation:spin 5s linear infinite}
+.mark i::after{content:"";position:absolute;inset:.25rem;border-radius:50%;background:var(--bg)}
+@keyframes spin{to{transform:rotate(1turn)}}
+.controls{display:flex;align-items:center;gap:.6rem}
+.ctl{display:inline-flex;align-items:center;gap:.45rem;padding:.38rem .9rem;border:1px solid var(--line-hi);border-radius:99px;background:var(--surface);font-weight:600;font-size:.92rem;transition:border-color .2s,transform .25s var(--spring)}
+.ctl:hover{border-color:var(--ion)}
+.ctl:active{transform:scale(.95)}
+.ctl svg{width:1.05rem;height:1.05rem;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+:root[data-theme="light"] .i-sun,:root:not([data-theme="light"]) .i-moon{display:none}
+.langseg{margin:0;background:var(--surface)}
+.langseg button{font-size:.88rem;padding:.2rem .8rem;letter-spacing:.02em}
+
+/* tabs */
+nav{position:relative;display:inline-flex;flex-wrap:wrap;gap:.25rem;padding:.3rem;border:1px solid var(--line);border-radius:99px;background:var(--nav-bg);box-shadow:var(--hi-inset),var(--shadow-sm)}
+nav button{position:relative;z-index:1;border:0;background:transparent;color:var(--muted);padding:.55rem 1.3rem;border-radius:99px;font-weight:600;letter-spacing:-.005em;transition:color .3s,background .2s}
+nav button:hover{color:var(--text);background:var(--hover)}
+nav:not(.inked) button[aria-selected=true]{background:var(--spectrum);color:var(--on-accent)}
+nav.inked button[aria-selected=true]{color:var(--on-accent);background:transparent}
+.tab-ink{position:absolute;left:0;top:0;border-radius:99px;background:var(--spectrum);box-shadow:0 0 28px -6px var(--glow),inset 0 1px 0 var(--btn-hi);pointer-events:none;opacity:0}
+nav.inked .tab-ink{opacity:1}
+.tab-ink.anim{transition:transform .55s var(--out),width .55s var(--out),height .55s var(--out)}
+
+.scene{padding-top:1.3rem}
+.scene h2{font-family:var(--display);font-size:clamp(1.6rem,2.3vw,2.6rem);font-weight:650;margin:0 0 .3rem;letter-spacing:-.04em;line-height:1.05}
+.lede{margin:0 0 1rem;max-width:66ch;color:var(--muted);font-size:1.08rem}
+.shead{display:flex;flex-wrap:wrap;justify-content:space-between;align-items:flex-end;gap:1rem 2rem;margin-bottom:1.1rem}
+.shead .lede{margin:0}
+.sheet{position:relative;background:var(--sheet);border:1px solid var(--line);border-radius:1.1rem;padding:1.3rem 1.5rem;box-shadow:var(--hi-inset),var(--shadow)}
+.sheet::before{content:"";position:absolute;inset:-1px;border-radius:inherit;padding:1px;background:var(--sheet-edge);-webkit-mask:linear-gradient(#000 0 0) content-box,linear-gradient(#000 0 0);-webkit-mask-composite:xor;mask-composite:exclude;pointer-events:none}
+.sheet h3{font-family:var(--display);font-size:1.12rem;font-weight:600;margin:0 0 .9rem;color:var(--text);letter-spacing:-.015em}
+.row{display:flex;flex-wrap:wrap;gap:1.5rem;align-items:flex-start}
+.grid{display:grid;gap:1.4rem}
+.cols2{grid-template-columns:minmax(0,1.1fr) minmax(0,1fr)}
+.cols3{grid-template-columns:repeat(auto-fit,minmax(min(100%,22rem),1fr))}
+@media (max-width:900px){.cols2{grid-template-columns:1fr}}
+
+.btn{position:relative;isolation:isolate;overflow:hidden;background:var(--spectrum);color:var(--on-accent);border:0;border-radius:99px;padding:.8rem 1.8rem;font-weight:700;font-size:1.05rem;letter-spacing:-.005em;box-shadow:inset 0 1px 0 var(--btn-hi),0 12px 32px -14px var(--glow);transition:transform .25s var(--spring),box-shadow .3s,opacity .2s}
+.btn::after{content:"";position:absolute;inset:0;z-index:-1;background:linear-gradient(105deg,transparent 35%,var(--sheen) 50%,transparent 65%);transform:translateX(-120%);transition:transform .8s var(--out)}
+.btn:hover:not(:disabled){transform:translateY(-2px);box-shadow:inset 0 1px 0 var(--btn-hi),0 18px 40px -12px var(--glow)}
+.btn:hover:not(:disabled)::after{transform:translateX(120%)}
+.btn:active:not(:disabled){transform:translateY(1px) scale(.97);transition-duration:.08s}
+.btn.big{font-size:1.25rem;padding:.9rem 2.3rem}
+.btn.alt{background:var(--surface-hi);color:var(--text);box-shadow:inset 0 0 0 1px var(--line-hi)}
+.btn.alt::after{background:linear-gradient(105deg,transparent 35%,var(--sheen-alt) 50%,transparent 65%)}
+.btn.alt:hover:not(:disabled){box-shadow:inset 0 0 0 1px var(--plasma),0 14px 36px -14px var(--plasma-glow)}
+.btn:disabled{opacity:.55;cursor:not-allowed}
+.btn.live{animation:glow 1.3s ease-in-out infinite;opacity:.85}
+@keyframes glow{0%,100%{box-shadow:0 0 0 0 var(--glow)}50%{box-shadow:0 0 0 .8rem transparent}}
+.err{margin:1rem 0 0;padding:.75rem 1rem;border:1px solid var(--red-line);border-left:4px solid var(--red);border-radius:.6rem;background:var(--red-soft);color:var(--red-text)}
+@keyframes rise{from{opacity:0;transform:translateY(.6rem)}}
+
+/* scene 1: launch row, metrics */
+.liverow{display:flex;flex-wrap:wrap;align-items:center;gap:1rem 1.2rem}
+.live-pill{display:inline-flex;align-items:center;gap:.6rem;padding:.4rem 1rem;border-radius:99px;border:1px solid var(--green-line);background:var(--green-soft);color:var(--green-text);font-weight:600;animation:rise .35s var(--out)}
+.live-pill::before{content:"";width:.6rem;height:.6rem;border-radius:50%;background:var(--green);animation:beacon 1.1s ease-out infinite}
+@keyframes beacon{0%{box-shadow:0 0 0 0 var(--green-ring)}100%{box-shadow:0 0 0 .7rem transparent}}
+.counters{position:relative;display:grid;grid-template-columns:repeat(auto-fit,minmax(11rem,1fr));gap:.9rem;margin:0 0 1.1rem;padding:2px;overflow:hidden;border-radius:1.2rem}
+.counter{position:relative;overflow:hidden;background:var(--sheet);border:1px solid var(--line);border-radius:1.05rem;padding:.8rem 1.15rem .9rem;box-shadow:var(--hi-inset)}
+.counter b{display:block;font-family:var(--display);font-weight:400;font-size:clamp(1.7rem,2.3vw,2.8rem);line-height:1.1;letter-spacing:-.045em;font-variant-numeric:tabular-nums;background:var(--num);-webkit-background-clip:text;background-clip:text;color:transparent;white-space:nowrap}
+.counter span{color:var(--muted);font-size:.92rem}
+.counter.hero{grid-column:span 2;display:flex;flex-direction:column;justify-content:flex-end;border-color:var(--ion-line)}
+.counter.hero b{font-weight:300;font-size:clamp(2.6rem,4vw,4.8rem);line-height:1;letter-spacing:-.06em;background:var(--num-hero);-webkit-background-clip:text;background-clip:text}
+.prog{position:absolute;left:0;right:0;bottom:0;height:4px;background:var(--track)}
+.prog i{display:block;height:100%;background:var(--spectrum);transform-origin:0 50%;transform:scaleX(var(--f,0));transition:transform .15s linear;box-shadow:0 0 12px var(--glow)}
+.counter.bad{border-color:var(--red-line)}
+.counter.bad b{background:none;color:var(--red);-webkit-text-fill-color:var(--red)}
+.sweep{position:absolute;top:0;bottom:0;left:0;width:30%;pointer-events:none;opacity:0;background:linear-gradient(100deg,transparent,var(--sweep),transparent)}
+.human{position:relative;margin:0 0 1.2rem;padding:.85rem 1.3rem .85rem 2.9rem;border:1px solid var(--amber-line);border-radius:1rem;background:linear-gradient(90deg,var(--amber-soft),transparent);color:var(--amber-text);font-weight:500;font-size:1.1rem;animation:rise .5s var(--out)}
+.human::before{content:"";position:absolute;left:1.2rem;top:1.3rem;width:.6rem;height:.6rem;border-radius:50%;background:var(--amber);box-shadow:0 0 12px var(--amber)}
+
+/* bars: transform-scaled fills, value in --f (0..1) */
+.bars{display:grid;gap:.6rem}
+.bar{display:grid;grid-template-columns:7.5rem 1fr 3.6rem;gap:.8rem;align-items:center}
+.bar .n{font-family:var(--mono);text-align:right;font-variant-numeric:tabular-nums}
+.track{height:.9rem;background:var(--track);border-radius:99px;overflow:hidden;box-shadow:var(--track-inset)}
+.fill{height:100%;width:100%;background:var(--spectrum);transform-origin:0 50%;transform:scaleX(var(--f,0));transition:transform .6s var(--spring)}
+.fill.red{background:var(--fill-red)}
+.fill.gray{background:var(--fill-gray)}
+.fill.grow{animation:grow 1s var(--out) both}
+@keyframes grow{from{transform:scaleX(0)}}
+
+/* feed */
+.feed{max-height:34rem;overflow:auto;margin:0;padding:0;list-style:none}
+.feed li,.shame li{position:relative;cursor:pointer;border-radius:.65rem;transition:background .15s}
+.feed li{display:grid;grid-template-columns:minmax(0,1fr) auto;gap:.15rem .8rem;padding:.55rem .75rem;border-bottom:1px solid var(--row-line);font-size:.95rem}
+.feed li.in{animation:feedin .45s var(--out)}
+@keyframes feedin{from{opacity:0;transform:translateY(-.7rem)}}
+.feed li:hover,.shame li:hover{background:var(--hover)}
+.feed li.sel,.shame li.sel{background:var(--sel);box-shadow:inset 0 0 0 1px var(--plasma)}
+.feed .txt{grid-column:1/-1;color:var(--muted);white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+.feed li.lost{cursor:default}
+.tags{display:flex;flex-wrap:wrap;gap:.4rem;align-items:center}
+.tag{display:inline-block;padding:.05rem .65rem;border:1px solid var(--line-hi);border-radius:99px;font-size:.9rem;font-weight:600;background:var(--hover)}
+.tag.red{background:var(--red-soft);border-color:var(--red-line);color:var(--red-text)}
+.tag.sev{background:var(--plasma-soft);border-color:var(--plasma-line)}
+.meter{display:inline-block;width:5rem;height:.55rem;background:var(--track);border-radius:99px;overflow:hidden;vertical-align:middle}
+.meter i{display:block;height:100%;background:var(--fill-red)}
+.shame{margin:0;padding:0;list-style:none;counter-reset:s}
+.shame li{padding:.65rem .85rem .65rem 3rem;margin-bottom:.45rem;border:1px solid var(--row-line);background:var(--hover)}
+.shame li:not(.muted){counter-increment:s}
+.shame li:not(.muted)::before{content:counter(s);position:absolute;left:.85rem;top:.58rem;width:1.5rem;font-family:var(--display);font-weight:300;font-size:1.35rem;line-height:1.3;color:var(--red);text-align:center;font-variant-numeric:tabular-nums}
+.shame li:first-child:not(.muted){border-color:var(--red-line);background:linear-gradient(90deg,var(--red-soft),transparent)}
+.shame li.muted{padding-left:.85rem;cursor:default}
+.shame small{display:block;color:var(--muted);font-family:var(--mono);margin-top:.15rem}
+
+/* hotline */
+textarea{width:100%;min-height:7.5rem;font:inherit;font-size:1.2rem;padding:.9rem 1.1rem;color:var(--text);border:1px solid var(--line-hi);border-radius:.85rem;background:var(--input-bg);resize:vertical;line-height:1.5;transition:border-color .2s,box-shadow .3s}
+textarea:focus{outline:none;border-color:var(--ion);box-shadow:0 0 0 4px var(--glow-soft),0 0 40px -12px var(--glow)}
+.examples{display:flex;flex-wrap:wrap;gap:.5rem;margin:.9rem 0}
+.examples button{background:var(--hover);border:1px solid var(--line-hi);border-radius:99px;padding:.4rem 1.05rem;font-size:.95rem;font-weight:500;transition:border-color .15s,background .15s,transform .25s var(--spring)}
+.examples button:hover{border-color:var(--ion);background:var(--ion-soft);transform:translateY(-1px)}
+.examples button:active{transform:scale(.96)}
+.ms{font-family:var(--display);font-weight:200;font-size:clamp(3.6rem,6.4vw,7.6rem);line-height:.95;letter-spacing:-.065em;font-variant-numeric:tabular-nums;background:var(--spectrum);-webkit-background-clip:text;background-clip:text;color:transparent;transition:opacity .25s}
+.ms small{font-size:.24em;font-weight:500;letter-spacing:0;margin-left:.4rem;-webkit-text-fill-color:var(--muted)}
+.think{height:2px;margin:.8rem 0 .7rem;border-radius:99px;background:var(--track);overflow:hidden}
+.think i{display:block;width:35%;height:100%;background:linear-gradient(90deg,transparent,var(--ion),transparent);opacity:0;transform:translateX(-100%)}
+.thinking .ms{opacity:.45}
+.thinking .think i{opacity:1;animation:thinkrun 1s cubic-bezier(.45,0,.55,1) infinite}
+@keyframes thinkrun{to{transform:translateX(290%)}}
+#h-answers{transition:opacity .25s}
+.thinking #h-answers{opacity:.55}
+.gauges{display:grid;grid-template-columns:repeat(auto-fit,minmax(15rem,1fr));gap:.9rem 1.8rem}
+.gauges.mb{margin-bottom:1.2rem}
+.gauge .lab{display:flex;justify-content:space-between;font-weight:600;margin-bottom:.35rem}
+.gauge .v{font-family:var(--mono);font-variant-numeric:tabular-nums}
+.chipbox{border:1px solid var(--line);border-radius:.85rem;padding:.7rem 1rem;background:var(--well)}
+.chipbox .big{font-family:var(--display);font-size:1.5rem;font-weight:600;letter-spacing:-.025em}
+.chipbox small{display:block;color:var(--muted);font-family:var(--mono);font-size:.9rem}
+.versus{display:grid;gap:1.1rem}
+.vs{display:grid;grid-template-columns:minmax(9rem,15rem) minmax(0,1fr);grid-template-areas:"num lane" "num meta";gap:.45rem 1.6rem;align-items:center;border:1px solid var(--line);border-radius:1rem;padding:1rem 1.3rem;background:var(--well)}
+.vs.slow{border-color:var(--red-line)}
+.vs b{grid-area:num;font-family:var(--display);font-weight:300;font-size:clamp(2.2rem,3.4vw,3.8rem);line-height:1;letter-spacing:-.05em;font-variant-numeric:tabular-nums;white-space:nowrap;color:var(--ion)}
+.vs.slow b{color:var(--red)}
+.vs .lane{grid-area:lane;height:1.1rem;border-radius:99px;background:var(--track);overflow:hidden;box-shadow:var(--track-inset)}
+.vs .lane i{display:block;height:100%;background:var(--spectrum);transform-origin:0 50%;transform:scaleX(var(--f,0))}
+.vs.slow .lane i{background:var(--fill-red)}
+.vs .meta{grid-area:meta}
+.vs .meta .mono{margin-left:.8rem;color:var(--muted)}
+@media (max-width:700px){.vs{grid-template-columns:1fr;grid-template-areas:"num" "lane" "meta"}}
+.ratio{font-family:var(--display);font-size:1.6rem;font-weight:600;letter-spacing:-.025em;margin-top:1.1rem}
+#h-compare{animation:rise .5s var(--out)}
+
+/* consistency */
+.case p.claim{color:var(--muted);border-left:3px solid var(--plasma);padding-left:.9rem;margin:0 0 1rem}
+.cells{display:grid;grid-template-columns:repeat(25,minmax(0,1fr));gap:.22rem;margin:0 0 1.1rem}
+.cells i{aspect-ratio:.72;border-radius:.2rem;background:var(--cell-empty);box-shadow:inset 0 0 0 1px var(--cell-edge)}
+.cells i.on{transform:rotate(var(--r,0deg));animation:pop .45s var(--spring) both;box-shadow:none}
+.cells i.c-approve{background:var(--cell-approve)}
+.cells i.c-deny{background:var(--cell-deny)}
+.cells i.c-human{background:var(--cell-human)}
+.cells i.c-other{background:transparent;box-shadow:inset 0 0 0 1px var(--line-hi)}
+.cells i.c-err{background:transparent;box-shadow:inset 0 0 0 1px var(--red-line)}
+@keyframes pop{from{opacity:0;transform:scale(.2) rotate(var(--r,0deg))}}
+.headline{font-family:var(--display);font-size:clamp(1.5rem,2.1vw,2.4rem);font-weight:650;letter-spacing:-.04em;margin:1rem 0 .2rem;line-height:1.1;font-variant-numeric:tabular-nums}
+.headline.unanimous{background:var(--spectrum);-webkit-background-clip:text;background-clip:text;color:transparent}
+.stats{display:grid;grid-template-columns:repeat(3,1fr);gap:.6rem;margin-top:.9rem;text-align:center}
+.stats div{background:var(--well);border:1px solid var(--row-line);border-radius:.65rem;padding:.55rem .3rem}
+.stats b{display:block;font-family:var(--mono);font-size:1.25rem;font-weight:600;font-variant-numeric:tabular-nums}
+.stats span{font-size:.9rem;color:var(--muted)}
+.gerald{border-style:dashed;border-color:var(--amber-line);background:var(--gerald-bg)}
+.gerald::before{display:none}
+.joke{display:inline-block;margin:0 0 1rem;padding:.2rem .85rem;border-radius:99px;background:var(--amber-soft);border:1px solid var(--amber-line);color:var(--amber-text);font-weight:700;font-size:.95rem}
+.seg{display:inline-flex;gap:.25rem;padding:.25rem;border:1px solid var(--line);border-radius:99px;margin-bottom:.8rem}
+.seg button{border:0;background:transparent;padding:.25rem 1rem;border-radius:99px;color:var(--muted);font-weight:600;transition:background .2s,color .2s}
+.seg button[aria-pressed=true]{background:var(--spectrum);color:var(--on-accent)}
+
+/* photos and boxes (scene 4 and the Box card) */
+.exhibit{position:relative;display:inline-block;max-width:100%;border-radius:.85rem;border:1px solid var(--line-hi);overflow:visible;background:var(--photo-bg);line-height:0;box-shadow:var(--shadow)}
+.exhibit img{max-width:100%;max-height:max(16rem,min(56vh,calc(100vh - 26rem)));display:block;border-radius:.85rem}
+.scan{position:absolute;inset:0;border-radius:.85rem;overflow:hidden;pointer-events:none;opacity:0;transition:opacity .35s}
+.scan::before{content:"";position:absolute;inset:0;background-image:linear-gradient(var(--scan-grid) 1px,transparent 1px),linear-gradient(90deg,var(--scan-grid) 1px,transparent 1px);background-size:2.2rem 2.2rem;background-color:var(--scan-tint)}
+.scan i{position:absolute;left:0;top:0;width:100%;height:100%;background:var(--scan-beam);transform:translateY(-100%)}
+.exhibit.scanning .scan{opacity:1}
+.exhibit.scanning .scan i{animation:scan 1.5s cubic-bezier(.45,0,.55,1) infinite}
+@keyframes scan{to{transform:translateY(100%)}}
+.bbox{position:absolute;border:2px solid var(--red);border-radius:.3rem;background:var(--bbox-fill);box-shadow:var(--bbox-shadow);line-height:1.2;animation:boxin .65s var(--out) backwards}
+.bbox::after{content:"";position:absolute;inset:-2px;border:2px solid var(--red);border-radius:inherit;opacity:0;animation:lock .8s ease-out .5s}
+/* label sits outside the rectangle: above by default, below near the top edge, right-aligned near the right edge */
+.bbox span{position:absolute;bottom:calc(100% + 5px);left:-2px;background:var(--red);color:var(--label-text);font-weight:700;font-size:.82rem;padding:.05rem .55rem;border-radius:.3rem;white-space:nowrap;animation:rise .35s var(--out) .45s backwards}
+.bbox.below span{bottom:auto;top:calc(100% + 5px)}
+.bbox.right span{left:auto;right:-2px}
+.bbox.inside span{bottom:auto;top:4px;left:4px}
+.bbox.inside.right span{left:auto;right:4px}
+@keyframes boxin{from{clip-path:inset(0 100% 100% 0);opacity:.3}to{clip-path:inset(0 0 0 0);opacity:1}}
+@keyframes lock{from{opacity:.9;transform:scale(1.35)}to{opacity:0;transform:scale(1)}}
+.placeholder{padding:3rem 1.5rem;border:2px dashed var(--line-hi);border-radius:1rem;text-align:center;max-width:32rem}
+.placeholder b{font-size:1.5rem}
+.xbody{display:flex;gap:1.5rem;flex-wrap:wrap;align-items:flex-start}
+.xres{flex:1 1 16rem;min-width:0}
+.xres .bars{gap:.4rem}
+.xres p{margin:.5rem 0}
+.xres h3{margin:0 0 .5rem}
+.out.pending,.pout.pending{display:inline-block;font-family:var(--mono);background:linear-gradient(90deg,var(--muted) 30%,var(--pending-hi) 50%,var(--muted) 70%);background-size:300% 100%;-webkit-background-clip:text;background-clip:text;color:transparent;animation:shimmer 1.4s linear infinite}
+@keyframes shimmer{from{background-position:100% 0}to{background-position:0 0}}
+.dial{font-family:var(--display);font-weight:200;font-size:clamp(3rem,4.4vw,5.4rem);line-height:1;letter-spacing:-.065em;font-variant-numeric:tabular-nums}
+.dial .dv{background:var(--num-red);-webkit-background-clip:text;background-clip:text;color:transparent}
+.dial small{display:block;margin-top:.15rem;font-size:max(.95rem,.2em);font-weight:500;letter-spacing:0;line-height:1.3;color:var(--muted);font-family:var(--sans)}
+.stamp{position:relative;display:inline-block;max-width:100%;margin-top:.8rem;padding:.4rem 1.2rem;border:3px solid var(--red);border-radius:.7rem;color:var(--red);background:var(--red-soft);box-shadow:0 0 34px var(--red-glow),inset 0 0 30px var(--red-glow);font-family:var(--display);font-weight:800;font-size:clamp(1.1rem,1.6vw,1.9rem);line-height:1.2;transform:rotate(-4deg);text-transform:uppercase;letter-spacing:.04em;animation:slam .5s cubic-bezier(.3,1.5,.45,1) 1.05s both}
+.stamp::after{content:"";position:absolute;inset:-3px;border:3px solid currentColor;border-radius:inherit;opacity:0;animation:shock .8s ease-out 1.25s}
+.stamp.ok{border-color:var(--green);color:var(--green);background:var(--green-soft);box-shadow:0 0 34px var(--green-glow),inset 0 0 30px var(--green-glow);font-size:clamp(.9rem,1.1vw,1.3rem);transform:rotate(-2deg);animation-name:slamok}
+@keyframes slam{0%{transform:rotate(-14deg) scale(3);opacity:0}55%{transform:rotate(-3deg) scale(.92);opacity:1}100%{transform:rotate(-4deg) scale(1);opacity:1}}
+@keyframes slamok{0%{transform:rotate(-10deg) scale(2.4);opacity:0}55%{transform:rotate(-1deg) scale(.95);opacity:1}100%{transform:rotate(-2deg) scale(1);opacity:1}}
+@keyframes shock{from{opacity:.8;transform:scale(1)}to{opacity:0;transform:scale(1.5,1.9)}}
+
+/* raw json viewer */
+.raw{margin-top:1.4rem}
+.rawtoggle{display:inline-flex;align-items:center;gap:.6rem;background:var(--hover);border:1px solid var(--line-hi);border-radius:99px;padding:.45rem 1.2rem;font-weight:600;font-family:var(--mono);font-size:.92rem;transition:border-color .2s,background .2s,box-shadow .3s}
+.rawtoggle::before{content:"{ }";color:var(--ion);font-weight:700;transition:transform .4s var(--spring)}
+.rawtoggle:hover{border-color:var(--ion);box-shadow:0 0 24px -8px var(--glow)}
+.rawtoggle[aria-expanded=true]{border-color:var(--plasma);background:var(--plasma-soft)}
+.rawtoggle[aria-expanded=true]::before{transform:rotate(90deg)}
+.rawbody{margin-top:1rem;padding:1.2rem 1.4rem;border:1px solid var(--line);border-radius:1.1rem;background:var(--rawbody);box-shadow:var(--shadow)}
+.rawtitle{font-family:var(--display);font-weight:650;font-size:1.2rem;letter-spacing:-.02em;margin-bottom:.6rem}
+.rawep{display:inline-block;padding:.15rem .7rem;border-radius:.45rem;background:var(--ion-soft);border:1px solid var(--ion-line);color:var(--ion);font-size:.92rem;word-break:break-all}
+.rawep:empty,.rawcap:empty{display:none}
+.rawcap{color:var(--muted);font-size:.95rem;margin:.45rem 0 .9rem}
+.rawpanes{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:1rem;margin-top:.6rem}
+@media (max-width:900px){.rawpanes{grid-template-columns:1fr}}
+.pane{border:1px solid var(--line-hi);border-radius:.85rem;overflow:hidden;background:var(--code-bg);min-width:0;box-shadow:var(--hi-inset),var(--shadow-sm)}
+.panehead{display:flex;justify-content:space-between;align-items:center;padding:.45rem .9rem;border-bottom:1px solid var(--line);font-weight:600;background:var(--code-head)}
+.panehead span{display:inline-flex;align-items:center;gap:.55rem}
+.panehead span::before{content:"";width:.55rem;height:.55rem;border-radius:50%;background:var(--ion);box-shadow:0 0 10px var(--ion)}
+.pane + .pane .panehead span::before{background:var(--green);box-shadow:0 0 10px var(--green)}
+.copy{background:var(--hover);border:1px solid var(--line-hi);border-radius:99px;padding:.1rem .85rem;font-size:.9rem;transition:border-color .15s,transform .2s var(--spring)}
+.copy:hover{border-color:var(--ion)}
+.copy:active{transform:scale(.94)}
+pre.code{margin:0;padding:.9rem 1.1rem;max-height:24rem;overflow:auto;font-family:var(--mono);font-size:.88rem;line-height:1.6;color:var(--code-text);white-space:pre;tab-size:2;background:radial-gradient(120% 80% at 0% 0%,var(--code-glow),transparent 60%)}
+pre.code.empty{color:var(--muted);white-space:normal;font-family:var(--sans);font-size:1rem}
+.jk{color:var(--jk)}.js{color:var(--js)}.jn{color:var(--jn)}.jb{color:var(--jb)}
+
+/* start here */
+.homehero{display:grid;grid-template-columns:minmax(0,1.15fr) minmax(0,1fr);gap:1rem 2.5rem;align-items:center;margin-bottom:1rem}
+@media (max-width:1100px){.homehero{grid-template-columns:1fr}}
+.homehero .lede{margin:0}
+.flow{display:flex;flex-wrap:wrap;align-items:center;justify-content:flex-end;gap:.6rem 0}
+@media (max-width:1100px){.flow{justify-content:flex-start}}
+.flow span{padding:.45rem .95rem;border:1px solid var(--line-hi);border-radius:.7rem;background:var(--surface);font-weight:600;font-size:.95rem}
+.flow span:last-child{border-color:var(--ion-line);box-shadow:0 0 30px -12px var(--glow)}
+.flow .wire{position:relative;width:clamp(1.2rem,2.2vw,3.2rem);height:2px;background:var(--line-hi);overflow:hidden}
+.flow .wire::after{content:"";position:absolute;inset:0;width:40%;background:linear-gradient(90deg,transparent,var(--ion),transparent);animation:wire 2.2s linear infinite}
+.flow .wire + span + .wire::after{animation-delay:1.1s}
+@keyframes wire{from{transform:translateX(-100%)}to{transform:translateX(260%)}}
+.pbar{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:.8rem 1.6rem;margin-bottom:1.1rem;padding-top:.9rem;border-top:1px solid var(--line)}
+.pbar .lede{margin:0;color:var(--text);font-weight:500}
+.pgrid{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));gap:1.2rem;align-items:start}
+@media (max-width:1400px){.pgrid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media (max-width:700px){.pgrid{grid-template-columns:1fr}}
+.pcard{display:flex;flex-direction:column;gap:.15rem;min-width:0}
+.phead{display:flex;align-items:center;justify-content:space-between;gap:.8rem}
+.ptype{font-family:var(--display);font-weight:300;font-size:clamp(2.1rem,2.8vw,3.3rem);line-height:1;letter-spacing:-.05em;background:var(--num-type);-webkit-background-clip:text;background-clip:text;color:transparent}
+.phead .btn{padding:.6rem 1.5rem}
+.pdesc{margin:.35rem 0 .6rem;color:var(--muted)}
+.plabel{font-size:.88rem;font-weight:600;color:var(--muted);margin-top:.35rem}
+.pclaim{margin:.25rem 0 .4rem;padding:.6rem .9rem;border-left:3px solid var(--plasma);background:var(--well);border-radius:0 .6rem .6rem 0;font-size:1.05rem}
+.pq{margin:.25rem 0 .4rem;font-weight:600}
+.pq code{font-family:var(--mono);font-size:.92em;color:var(--ion);background:var(--ion-soft);padding:.05rem .35rem;border-radius:.3rem}
+.opts{display:flex;flex-wrap:wrap;gap:.35rem;margin:.2rem 0 .4rem}
+.levels{margin:.2rem 0 .4rem;padding-left:1.6rem;color:var(--muted)}
+.levels li::marker{font-family:var(--mono);color:var(--ion)}
+.pcard .exhibit{align-self:center;margin:.5rem 0 .4rem}
+.pcard .exhibit img{max-height:min(34rem,44vh)}
+.pout{margin-top:.9rem}
+.pout .dial{font-size:clamp(2.8rem,3.8vw,4.6rem)}
+.pick{font-family:var(--display);font-size:clamp(1.7rem,2.2vw,2.5rem);font-weight:600;letter-spacing:-.035em;line-height:1.1}
+.pick small{display:block;font-size:max(.9rem,.4em);font-weight:500;letter-spacing:0;line-height:1.35;color:var(--muted);margin-top:.15rem}
+.pout .bars{margin-top:.8rem}
+.pmeta{margin-top:.6rem;color:var(--muted);font-size:.92rem}
+.pmeta:empty{display:none}
+.scale{position:relative;margin:1rem 0 .3rem;padding-top:.7rem}
+.scale .rail{height:.7rem;border-radius:99px;background:var(--rail)}
+.scale .mkwrap{position:absolute;left:0;right:0;top:0;height:2.1rem;transform:translateX(calc(var(--x,0) * 100%));animation:mkin 1.1s var(--out) both;pointer-events:none}
+@keyframes mkin{from{transform:translateX(0)}}
+.scale .mk{position:absolute;left:0;top:0;width:4px;height:2.1rem;border-radius:2px;background:var(--mk);transform:translateX(-50%);box-shadow:0 0 14px var(--mk-glow)}
+.ticks{display:flex;justify-content:space-between;gap:.6rem;margin-top:.8rem;font-size:.9rem;color:var(--muted)}
+.ticks div{flex:1;text-align:center}
+.ticks div:first-child{text-align:left}
+.ticks div:last-child{text-align:right}
+.ticks b{display:block;font-family:var(--mono);color:var(--text)}
+.pcard .rawpanes{grid-template-columns:1fr}
+.pcard pre.code{max-height:18rem}
+.pcard .raw{margin-top:1rem}
+.later{margin-top:2rem}
+.later h3{font-family:var(--display);font-size:1.25rem;font-weight:600;letter-spacing:-.02em;margin:0 0 .8rem}
+.gotos{display:grid;grid-template-columns:repeat(auto-fit,minmax(min(100%,16rem),1fr));gap:.9rem}
+.goto{text-align:left;padding:.85rem 1.15rem;border:1px solid var(--line);border-radius:.9rem;background:var(--surface);transition:border-color .2s,transform .3s var(--spring),box-shadow .3s}
+.goto b{display:block;font-family:var(--display);font-size:1.12rem;letter-spacing:-.015em}
+.goto span{color:var(--muted)}
+.goto:hover{border-color:var(--ion);transform:translateY(-2px);box-shadow:0 18px 40px -22px var(--glow)}
+.goto:active{transform:scale(.98)}
+
+@media (prefers-reduced-motion:reduce){
+  *,*::before,*::after{animation-duration:0s!important;animation-delay:0s!important;animation-iteration-count:1!important;transition:none!important}
+  header::after,.btn::after{display:none}
+}
+</style>
+</head>
+<body>
+<div class="aurora" aria-hidden="true"><i></i><i></i><i></i></div>
+
+<header>
+  <div class="brand">
+    <h1>MaybeCovered Insurance</h1>
+    <p><b data-t="brand.tag"></b></p>
+  </div>
+  <div class="hright">
+    <div class="powered">
+      <div class="mark"><i></i><span data-t="brand.powered"></span></div>
+      <div data-t="brand.sub"></div>
+    </div>
+    <div class="controls">
+      <div class="seg langseg" role="group" data-t-aria="lang.aria">
+        <button type="button" id="lang-en" lang="en" aria-pressed="true">EN</button><button type="button" id="lang-fr" lang="fr" aria-pressed="false">FR</button>
+      </div>
+      <button type="button" class="ctl" id="theme-toggle">
+        <svg class="i-sun" viewBox="0 0 24 24" aria-hidden="true"><circle cx="12" cy="12" r="4.2"/><path d="M12 2.5v2.2M12 19.3v2.2M2.5 12h2.2M19.3 12h2.2M5.3 5.3l1.6 1.6M17.1 17.1l1.6 1.6M5.3 18.7l1.6-1.6M17.1 6.9l1.6-1.6"/></svg>
+        <svg class="i-moon" viewBox="0 0 24 24" aria-hidden="true"><path d="M20 14.5A8 8 0 1 1 9.5 4a6.5 6.5 0 0 0 10.5 10.5z"/></svg>
+        <span id="theme-label"></span>
+      </button>
+    </div>
+  </div>
+</header>
+
+<nav role="tablist" id="tabs">
+  <button role="tab" id="tab-home" aria-selected="true" data-scene="s0" data-t="tab.home"></button>
+  <button role="tab" id="tab-tsunami" aria-selected="false" data-scene="s1" data-t="tab.tsunami"></button>
+  <button role="tab" id="tab-hotline" aria-selected="false" data-scene="s2" data-t="tab.hotline"></button>
+  <button role="tab" id="tab-consistency" aria-selected="false" data-scene="s3" data-t="tab.consistency"></button>
+  <button role="tab" id="tab-sushi" aria-selected="false" data-scene="s4" data-t="tab.sushi"></button>
+</nav>
+
+<!-- ================= Start here ================= -->
+<section class="scene" id="s0">
+  <div class="homehero">
+    <div><h2 data-t="home.h"></h2><p class="lede" data-t="home.lede"></p></div>
+    <div class="flow" aria-hidden="true"><span data-t="home.flow1"></span><i class="wire"></i><span data-t="home.flow2"></span><i class="wire"></i><span data-t="home.flow3"></span></div>
+  </div>
+  <div class="pbar"><p class="lede" data-t="home.four"></p><button class="btn big" id="p-all" disabled data-t="home.all"></button></div>
+  <div class="err" id="p-err" hidden></div>
+  <div class="pgrid" id="p-grid"></div>
+  <div class="later">
+    <h3 data-t="home.later"></h3>
+    <div class="gotos">
+      <button type="button" class="goto" data-goto="s1"><b data-t="home.g1t"></b><span data-t="home.g1"></span></button>
+      <button type="button" class="goto" data-goto="s2"><b data-t="home.g2t"></b><span data-t="home.g2"></span></button>
+      <button type="button" class="goto" data-goto="s3"><b data-t="home.g3t"></b><span data-t="home.g3"></span></button>
+      <button type="button" class="goto" data-goto="s4"><b data-t="home.g4t"></b><span data-t="home.g4"></span></button>
+    </div>
+  </div>
+</section>
+
+<!-- ================= Scene 1 ================= -->
+<section class="scene" id="s1" hidden>
+  <div class="shead">
+    <div><h2 data-t="tab.tsunami"></h2><p class="lede" data-t="t.lede"></p></div>
+    <div class="liverow">
+      <span class="live-pill" id="t-live" hidden data-t="t.live"></span>
+      <button class="btn big" id="t-go" data-t="t.go"></button>
+    </div>
+  </div>
+  <div class="err" id="t-err" hidden></div>
+
+  <div class="counters" id="t-counters">
+    <div class="counter hero"><b id="t-done">0</b><span id="t-done-l"></span><span class="prog"><i id="t-prog"></i></span></div>
+    <div class="counter"><b id="t-cps">0</b><span data-t="t.cps"></span></div>
+    <div class="counter"><b id="t-time">0.0 s</b><span id="t-time-l"></span></div>
+    <div class="counter"><b id="t-cost">$0</b><span data-t="t.cost"></span></div>
+    <div class="counter"><b id="t-med">-</b><span data-t="t.med"></span></div>
+    <div class="counter bad" id="t-errbox" hidden><b id="t-errs">0</b><span data-t="t.errs"></span></div>
+    <i class="sweep" id="t-sweep" aria-hidden="true"></i>
+  </div>
+  <p class="human" id="t-human" hidden></p>
+
+  <div class="grid cols2">
+    <div class="grid">
+      <div class="sheet"><h3 data-t="t.cats"></h3><div class="bars" id="t-cats"></div></div>
+      <div class="sheet"><h3 data-t="t.feed"></h3><ul class="feed" id="t-feed"></ul></div>
+    </div>
+    <div class="sheet" style="align-self:start"><h3 data-t="t.shame"></h3><ol class="shame" id="t-shame"></ol></div>
+  </div>
+  <div id="t-raw"></div>
+</section>
+
+<!-- ================= Scene 2 ================= -->
+<section class="scene" id="s2" hidden>
+  <div class="shead"><div><h2 data-t="tab.hotline"></h2><p class="lede" data-t="h.lede"></p></div></div>
+  <div class="grid cols2">
+    <div class="sheet">
+      <h3 data-t="h.describe"></h3>
+      <textarea id="h-text" data-t-aria="h.describe"></textarea>
+      <div class="examples" id="h-examples"></div>
+      <button class="btn alt" id="h-slow" data-t="h.slow"></button>
+      <div class="err" id="h-err" hidden></div>
+    </div>
+    <div class="sheet" id="h-card">
+      <h3 data-t="h.answer"></h3>
+      <div class="ms"><span id="h-ms">-</span><small>ms</small></div>
+      <div class="think" aria-hidden="true"><i></i></div>
+      <div class="muted mono" id="h-sub"></div>
+    </div>
+  </div>
+  <div class="sheet" id="h-answers-card" style="margin-top:1.4rem"><h3 data-t="h.ten"></h3><div id="h-answers" class="muted"></div></div>
+  <div class="sheet" id="h-compare" style="margin-top:1.4rem" hidden>
+    <h3 data-t="h.vs"></h3>
+    <div class="versus" id="h-vs"></div>
+    <div class="ratio" id="h-ratio"></div>
+  </div>
+  <div id="h-raw"></div>
+</section>
+
+<!-- ================= Scene 3 ================= -->
+<section class="scene" id="s3" hidden>
+  <div class="shead">
+    <div><h2 data-t="tab.consistency"></h2><p class="lede" data-t="c.lede"></p></div>
+    <button class="btn big" id="c-go" data-t="c.go"></button>
+  </div>
+  <div class="err" id="c-err" hidden></div>
+  <p class="muted mono" id="c-prog" style="margin:0"></p>
+  <div class="grid cols3" style="margin-top:.8rem">
+    <div class="sheet case" id="c-clear"></div>
+    <div class="sheet case" id="c-murky"></div>
+    <div class="sheet case gerald" id="c-gerald"></div>
+  </div>
+  <div id="c-raw"></div>
+</section>
+
+<!-- ================= Scene 4 ================= -->
+<section class="scene" id="s4" hidden>
+  <div class="shead">
+    <div><h2 data-t="tab.sushi"></h2><p class="lede" data-t="x.lede"></p></div>
+    <button class="btn big" id="x-all" disabled data-t="x.all"></button>
+  </div>
+  <div class="err" id="x-err" hidden></div>
+  <div class="row" id="x-grid"></div>
+</section>
+
+<script>
+"use strict";
+const $ = id => document.getElementById(id);
+
+/* ---------- i18n ---------- */
+const NB = "\u00a0", NNB = "\u202f";
+const D = {
+  en: {
+    "doc.title": "MaybeCovered Insurance - Claims Desk",
+    "brand.tag": "You're probably fine.",
+    "brand.powered": "powered by Jev · TypeSafe AI",
+    "brand.sub": "Claims decisions by Jev, a decision model. Typed answers, with probabilities.",
+    "theme.light": "Light", "theme.dark": "Dark",
+    "theme.toLight": "Switch to the light theme", "theme.toDark": "Switch to the dark theme",
+    "lang.aria": "Language",
+    "tab.home": "Start Here", "tab.tsunami": "Monday Morning Tsunami", "tab.hotline": "The Hotline",
+    "tab.consistency": "Ask It 50 Times", "tab.sushi": "Sick Leave Sushi Detector",
+    "server": "Server said {s}",
+    "raw.show": "Show raw JSON", "raw.hide": "Hide raw JSON", "raw.title": "Under the hood",
+    "raw.sent": "Sent", "raw.recv": "Received", "raw.copy": "Copy", "raw.copied": "Copied", "raw.copyFail": "Copy failed",
+    "raw.none": "Nothing sent yet.",
+    "home.h": "Ask a typed question. Get a typed answer.",
+    "home.lede": "Jev is a decision model. You send it a state (text, JSON or an image) plus typed questions, and it returns typed answers with probabilities, not generated text, so your code can branch on them.",
+    "home.flow1": "State: text, JSON or an image", "home.flow2": "Typed questions", "home.flow3": "Typed answers with probabilities",
+    "home.four": "There are four question types. Each card below runs one live example.",
+    "home.all": "Run all four", "home.loading": "Loading the examples.", "home.loadErr": "Could not load the examples: {m}",
+    "home.later": "Then see it at scale",
+    "home.g1t": "High volume", "home.g1": "A weekend of claims, judged as one live stream.",
+    "home.g2t": "Low latency", "home.g2": "Ten answers that update while you type.",
+    "home.g3t": "Consistency", "home.g3": "The same claim, asked 50 times.",
+    "home.g4t": "Image analysis", "home.g4": "Sushi, photographed during sick leave.",
+    "p.noul": "A yes/no question, answered as the probability of yes.",
+    "p.choice": "Pick one option from a list, with a probability per option.",
+    "p.score": "Rate against ordered levels. The score can fall between levels.",
+    "p.box": "Locate something in an image, as a rectangle.",
+    "p.input": "Example input", "p.question": "Question", "p.run": "Run", "p.notRun": "Not run yet.",
+    "p.asking": "Asking Jev...", "p.noAnswer": "No answer.", "p.failed": "The example failed: {m}",
+    "p.noPhoto": "No photo found. Drop a .jpg or .png into the project folder and reload this page.",
+    "p.photoAlt": "Example photo", "p.yes": "probability of yes", "p.conf": "confidence {p}", "p.confidence": "confidence",
+    "p.score2": "score, nearest level: {l}", "p.noBox": "No box returned.",
+    "p.tb": "top {t}, bottom {b}", "p.lr": "left {l}, right {r}", "p.box2": "box",
+    "p.meta": "{ms} ms, {tok} tokens, {cost}", "p.caption": "{n} example",
+    "p.hint": "Nothing sent yet. Press Run to see the request and response.",
+    "t.lede": "The weekend has filed 300 claims. Every one gets a category, a severity, a fraud probability and a verdict on whether a human needs to look at it.",
+    "t.go": "Open the floodgates", "t.live": "Stream open",
+    "t.done": "claims judged out of {n}", "t.cps": "claims per second", "t.elapsed": "elapsed", "t.total": "total time (server)",
+    "t.cost": "total cost of judgement", "t.med": "median latency per claim", "t.errs": "claims that failed",
+    "t.human": "A human at 4 minutes per claim would need {h} for these {n} claims, without coffee. Jev took {s} seconds.",
+    "t.cats": "Claims by category", "t.feed": "Latest claims (click one to inspect it)",
+    "t.shame": "Hall of shame: most suspicious claims", "t.nobody": "Nobody yet. Give it a minute.",
+    "t.lost": "Claim {i} lost", "t.needsHuman": "needs a human", "t.fraud": "fraud", "t.shameSmall": "{cat}, fraud {p}",
+    "t.broke": "The stream broke before the end ({n} claims judged). Is the server running? Press the button to try again.",
+    "t.claimCap": "Claim #{i}",
+    "t.hint": "Nothing sent yet. Run the scene, then click a claim to see what was sent to Jev and what came back.",
+    "h.lede": "Type your misfortune. Ten questions are answered at once, shortly after you stop typing.",
+    "h.describe": "Describe your misfortune", "h.slow": "Do it the slow way", "h.slowing": "Calling ten times, one after another...",
+    "h.answer": "Jev's answer", "h.waiting": "Waiting for a misfortune.", "h.ten": "The ten answers", "h.nothing": "Nothing yet.",
+    "h.vs": "One call versus ten calls", "h.sub": "{c} call, {tok} tokens, {cost}",
+    "h.fastMeta": "{c} call, all ten questions together", "h.slowMeta": "{c} calls, one after another", "h.tok": "{tok} tokens, {cost}",
+    "h.ratio": "The slow way takes {t}x the time and {c}x the tokens.",
+    "h.err": "The hotline is not picking up: {m}", "h.slowErr": "The slow way failed: {m}",
+    "h.latest": "Latest answer from the hotline", "h.slowCap": "Slow way (split: true): this is the first of the 10 calls",
+    "h.hint": "Nothing sent yet. Type a misfortune and the exchange with Jev appears here.",
+    "h.category": "Category", "h.severity": "Severity", "h.tone": "Tone",
+    "h.score": "score {s}", "h.conf": ", confidence {p}",
+    "n.fraud": "Fraud?", "n.human": "Needs a human", "n.injury": "Someone hurt", "n.third_party": "Third party involved",
+    "n.urgent": "Urgent", "n.covered": "Covered", "n.legal": "Legal action",
+    "c.lede": "The same claim, submitted 50 times each. Would you get the same answer twice? Gerald from Claims will play along.",
+    "c.go": "Ask it 50 times", "c.clear": "The clear-cut claim", "c.murky": "The murky claim", "c.gerald": "Gerald from Claims",
+    "c.joke": "Gerald is a random number generator. This is a joke.",
+    "c.geraldText": "Same murky claim. Gerald decides with Math.random() each time a real result arrives.",
+    "c.identical": "{n} of {n} identical", "c.agree": "{a} of {n} agree", "c.waiting": "Waiting for answers",
+    "c.min": "fraud min", "c.max": "fraud max", "c.spread": "spread", "c.pts": "{v} pts",
+    "c.fails": "{n} failed runs not counted", "c.received": "{n} answers received.", "c.finished": "Finished in {s} s.",
+    "c.broke": "The stream broke before the end ({n} answers received). Is the server running? Press the button to try again.",
+    "c.lastCap": "Last \"{c}\" run received", "c.segClear": "clear", "c.segMurky": "murky",
+    "c.hint": "Nothing sent yet. Ask it 50 times and the last exchange for each case appears here.",
+    "x.lede": "An employee declared gastroenteritis and went on sick leave. Then photos surfaced.",
+    "x.all": "Examine all", "x.fetching": "Fetching the evidence.", "x.exhibit": "Exhibit {l}", "x.examine": "Examine the evidence",
+    "x.notYet": "Not examined yet.", "x.examining": "Examining...", "x.chance": "chance of sushi", "x.plate": "What is on the plate",
+    "x.noFood": "No food probabilities returned.", "x.health": "Apparent health:", "x.score": " (score {s})",
+    "x.time": "Examination time:", "x.timeV": "{ms} ms, {tok} tokens, {cost}",
+    "x.denied": "Claim denied", "x.ok": "Bon appetit... sorry, get well soon",
+    "x.noFindings": "No findings.", "x.failed": "The examination failed: {m}", "x.listErr": "Could not list the evidence: {m}",
+    "x.waitTitle": "Waiting for evidence", "x.waitBody": "Drop a .jpg or .png into the project folder and reload this page.",
+    "x.sushi": "Sushi", "x.hint": "Nothing sent yet. Examine the evidence to see the request and response."
+  },
+  fr: {
+    "doc.title": "MaybeCovered Insurance - Service des sinistres",
+    "brand.tag": "Vous êtes probablement couvert.",
+    "brand.powered": "propulsé par Jev · TypeSafe AI",
+    "brand.sub": "Les sinistres sont tranchés par Jev, un modèle de décision. Des réponses typées, avec leurs probabilités.",
+    "theme.light": "Clair", "theme.dark": "Sombre",
+    "theme.toLight": "Passer au thème clair", "theme.toDark": "Passer au thème sombre",
+    "lang.aria": "Langue",
+    "tab.home": "Commencez ici", "tab.tsunami": "Le tsunami du lundi matin", "tab.hotline": "Le standard",
+    "tab.consistency": "Demandez 50 fois", "tab.sushi": "Détecteur de sushis en arrêt maladie",
+    "server": "Le serveur a répondu {s}",
+    "raw.show": "Voir le JSON brut", "raw.hide": "Masquer le JSON brut", "raw.title": "Sous le capot",
+    "raw.sent": "Envoyé", "raw.recv": "Reçu", "raw.copy": "Copier", "raw.copied": "Copié", "raw.copyFail": "Échec de la copie",
+    "raw.none": "Rien d’envoyé pour l’instant.",
+    "home.h": "Une question typée. Une réponse typée.",
+    "home.lede": "Jev est un modèle de décision. Vous lui envoyez un état (du texte, du JSON ou une image) et des questions typées" + NNB + "; il renvoie des réponses typées avec leurs probabilités, pas du texte généré. Votre code peut donc s’en servir directement pour décider.",
+    "home.flow1": "État" + NB + ": texte, JSON ou image", "home.flow2": "Questions typées", "home.flow3": "Réponses typées, avec probabilités",
+    "home.four": "Il existe quatre types de questions. Chaque carte ci-dessous lance un exemple en direct.",
+    "home.all": "Lancer les quatre", "home.loading": "Chargement des exemples.", "home.loadErr": "Impossible de charger les exemples" + NB + ": {m}",
+    "home.later": "Puis passez à l’échelle",
+    "home.g1t": "Gros volume", "home.g1": "Un week-end de sinistres, jugé en un seul flux en direct.",
+    "home.g2t": "Faible latence", "home.g2": "Dix réponses qui suivent votre frappe.",
+    "home.g3t": "Constance", "home.g3": "Le même sinistre, soumis 50 fois.",
+    "home.g4t": "Analyse d’image", "home.g4": "Des sushis, photographiés pendant un arrêt maladie.",
+    "p.noul": "Une question fermée, dont la réponse est la probabilité du oui.",
+    "p.choice": "Choisir une option dans une liste, avec une probabilité pour chacune.",
+    "p.score": "Noter selon des niveaux ordonnés" + NNB + "; le score peut tomber entre deux niveaux.",
+    "p.box": "Localiser quelque chose dans une image, sous forme de rectangle.",
+    "p.input": "Entrée d’exemple", "p.question": "Question", "p.run": "Lancer", "p.notRun": "Pas encore lancé.",
+    "p.asking": "Jev réfléchit…", "p.noAnswer": "Pas de réponse.", "p.failed": "L’exemple a échoué" + NB + ": {m}",
+    "p.noPhoto": "Aucune photo. Déposez un .jpg ou un .png dans le dossier du projet, puis rechargez la page.",
+    "p.photoAlt": "Photo d’exemple", "p.yes": "probabilité du oui", "p.conf": "confiance {p}", "p.confidence": "confiance",
+    "p.score2": "score, niveau le plus proche" + NB + ": {l}", "p.noBox": "Aucun rectangle renvoyé.",
+    "p.tb": "haut {t}, bas {b}", "p.lr": "gauche {l}, droite {r}", "p.box2": "rectangle",
+    "p.meta": "{ms} ms, {tok} jetons, {cost}", "p.caption": "Exemple {n}",
+    "p.hint": "Rien d’envoyé pour l’instant. Appuyez sur Lancer pour voir la requête et la réponse.",
+    "t.lede": "Le week-end a produit 300 déclarations de sinistre. Chacune reçoit une catégorie, une gravité, une probabilité de fraude et un avis" + NB + ": faut-il qu’un humain y jette un œil" + NNB + "?",
+    "t.go": "Ouvrir les vannes", "t.live": "Flux ouvert",
+    "t.done": "sinistres jugés sur {n}", "t.cps": "sinistres par seconde", "t.elapsed": "écoulé", "t.total": "durée totale (serveur)",
+    "t.cost": "coût total du jugement", "t.med": "latence médiane par sinistre", "t.errs": "sinistres en échec",
+    "t.human": "À 4 minutes par dossier, un humain mettrait {h} pour ces {n} sinistres, sans pause café. Jev a mis {s} secondes.",
+    "t.cats": "Sinistres par catégorie", "t.feed": "Derniers sinistres (cliquez pour inspecter)",
+    "t.shame": "Le mur de la honte" + NB + ": les dossiers les plus louches", "t.nobody": "Personne pour l’instant. Patience.",
+    "t.lost": "Sinistre {i} perdu", "t.needsHuman": "humain requis", "t.fraud": "fraude", "t.shameSmall": "{cat}, fraude {p}",
+    "t.broke": "Le flux s’est interrompu avant la fin ({n} sinistres jugés). Le serveur tourne-t-il" + NNB + "? Appuyez sur le bouton pour réessayer.",
+    "t.claimCap": "Sinistre n°" + NB + "{i}",
+    "t.hint": "Rien d’envoyé pour l’instant. Lancez la scène, puis cliquez sur un sinistre pour voir ce qui a été envoyé à Jev et ce qu’il a répondu.",
+    "h.lede": "Racontez votre malheur. Dix questions reçoivent leur réponse d’un coup, peu après que vous arrêtez de taper.",
+    "h.describe": "Décrivez votre malheur", "h.slow": "Le faire à l’ancienne", "h.slowing": "Dix appels, l’un après l’autre…",
+    "h.answer": "La réponse de Jev", "h.waiting": "En attente d’un malheur.", "h.ten": "Les dix réponses", "h.nothing": "Rien pour l’instant.",
+    "h.vs": "Un appel contre dix", "h.sub": "{c} appel, {tok} jetons, {cost}",
+    "h.fastMeta": "{c} appel, les dix questions ensemble", "h.slowMeta": "{c} appels, l’un après l’autre", "h.tok": "{tok} jetons, {cost}",
+    "h.ratio": "À l’ancienne, c’est {t} fois plus long et {c} fois plus de jetons.",
+    "h.err": "Le standard ne répond pas" + NB + ": {m}", "h.slowErr": "L’ancienne méthode a échoué" + NB + ": {m}",
+    "h.latest": "Dernière réponse du standard", "h.slowCap": "À l’ancienne (split" + NB + ": true)" + NB + ": voici le premier des 10 appels",
+    "h.hint": "Rien d’envoyé pour l’instant. Tapez un malheur et l’échange avec Jev s’affiche ici.",
+    "h.category": "Catégorie", "h.severity": "Gravité", "h.tone": "Ton",
+    "h.score": "score {s}", "h.conf": ", confiance {p}",
+    "n.fraud": "Fraude" + NNB + "?", "n.human": "Humain requis", "n.injury": "Quelqu’un de blessé", "n.third_party": "Tiers impliqué",
+    "n.urgent": "Urgent", "n.covered": "Couvert", "n.legal": "Action en justice",
+    "c.lede": "Les mêmes sinistres, soumis 50 fois chacun. Obtiendrez-vous deux fois la même réponse" + NNB + "? Gérald, du service Sinistres, se prête au jeu.",
+    "c.go": "Demander 50 fois", "c.clear": "Le sinistre limpide", "c.murky": "Le sinistre trouble", "c.gerald": "Gérald, service Sinistres",
+    "c.joke": "Gérald est un générateur de nombres aléatoires. C’est une blague.",
+    "c.geraldText": "Même sinistre trouble. Gérald tranche avec Math.random() chaque fois qu’un vrai résultat arrive.",
+    "c.identical": "{n} sur {n} identiques", "c.agree": "{a} sur {n} concordent", "c.waiting": "En attente des réponses",
+    "c.min": "fraude min.", "c.max": "fraude max.", "c.spread": "écart", "c.pts": "{v} pts",
+    "c.fails": "{n} essais en échec, non comptés", "c.received": "{n} réponses reçues.", "c.finished": "Terminé en {s} s.",
+    "c.broke": "Le flux s’est interrompu avant la fin ({n} réponses reçues). Le serveur tourne-t-il" + NNB + "? Appuyez sur le bouton pour réessayer.",
+    "c.lastCap": "Dernier essai «" + NB + "{c}" + NB + "» reçu", "c.segClear": "limpide", "c.segMurky": "trouble",
+    "c.hint": "Rien d’envoyé pour l’instant. Demandez 50 fois et le dernier échange de chaque cas s’affiche ici.",
+    "x.lede": "Un salarié s’est mis en arrêt maladie pour gastro-entérite. Puis des photos ont fait surface.",
+    "x.all": "Tout examiner", "x.fetching": "Récupération des pièces à conviction.", "x.exhibit": "Pièce {l}", "x.examine": "Examiner les preuves",
+    "x.notYet": "Pas encore examiné.", "x.examining": "Examen en cours…", "x.chance": "de probabilité qu’il s’agisse de sushis", "x.plate": "Qu’y a-t-il dans l’assiette" + NNB + "?",
+    "x.noFood": "Aucune probabilité alimentaire renvoyée.", "x.health": "Santé apparente" + NB + ":", "x.score": " (score {s})",
+    "x.time": "Durée de l’examen" + NB + ":", "x.timeV": "{ms} ms, {tok} jetons, {cost}",
+    "x.denied": "Sinistre refusé", "x.ok": "Bon appétit… pardon, prompt rétablissement",
+    "x.noFindings": "Aucune constatation.", "x.failed": "L’examen a échoué" + NB + ": {m}", "x.listErr": "Impossible de lister les pièces" + NB + ": {m}",
+    "x.waitTitle": "En attente de preuves", "x.waitBody": "Déposez un .jpg ou un .png dans le dossier du projet, puis rechargez la page.",
+    "x.sushi": "Sushis", "x.hint": "Rien d’envoyé pour l’instant. Examinez les preuves pour voir la requête et la réponse."
+  }
+};
+/* display labels for option keys; logic always uses the keys */
+const LBL = {
+  fr: {home:"habitation", motor:"auto", electronics:"électronique", health:"santé", travel:"voyage", pets:"animaux", other:"autre",
+       calm:"calme", annoyed:"agacé", furious:"furieux", "suspiciously cheerful":"étrangement enjoué",
+       approve:"indemniser", deny:"refuser", human:"humain",
+       sushi:"sushis", pizza:"pizza", burger:"burger", salad:"salade", "something else":"autre plat", "no food":"aucune nourriture"}
+};
+let lang = document.documentElement.lang === "fr" ? "fr" : "en";
+let PCT = null;
+const t = (k, v = {}) => String(D[lang][k] ?? D.en[k] ?? k).replace(/\{(\w+)\}/g, (_, x) => v[x] ?? "");
+const L = k => (LBL[lang] && LBL[lang][k]) || k;
+const LOC = () => lang === "fr" ? "fr-FR" : "en-US";
+const nf = (v, d) => Number(v).toLocaleString(LOC(), d == null ? {} : {minimumFractionDigits:d, maximumFractionDigits:d});
+
+const COST_PER_TOKEN = 0.042 / 1e6;
+const fmtCost = tokens => {
+  const c = tokens * COST_PER_TOKEN, n = nf(c, c < 0.01 ? 6 : 4);
+  return lang === "fr" ? n + NB + "$" : "$" + n;
+};
+const pct = p => PCT.format(p);
+const esc = s => String(s).replace(/[&<>"]/g, c => ({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;"}[c]));
+const cap = s => s.charAt(0).toUpperCase() + s.slice(1);
+const noul = a => (a && typeof a.noul === "number") ? a.noul : 0;
+const showErr = (id, msg) => { const e = $(id); e.textContent = msg; e.hidden = !msg; };
+const median = arr => {
+  if (!arr.length) return 0;
+  const s = [...arr].sort((a, b) => a - b), m = s.length >> 1;
+  return s.length % 2 ? s[m] : (s[m - 1] + s[m]) / 2;
+};
+const sevLabel = a => {
+  if (!a || typeof a.score !== "number") return "?";
+  const l = a.legend && a.legend[String(Math.round(a.score))];
+  return l ? l : nf(a.score, 1);
+};
+const meter = p => `<span class="meter"><i style="width:${Math.round(p * 100)}%"></i></span> ${pct(p)}`;
+const apiErr = async r => new Error(t("server", {s: r.status + " " + (await r.text()).slice(0, 200)}));
+let GEN = 0;  // bumped on language switch; stale async results check it
+
+/* ---------- motion helpers (all collapse to instant under reduced motion) ---------- */
+const RM = matchMedia("(prefers-reduced-motion: reduce)");
+const OUT = "cubic-bezier(.16,1,.3,1)";
+const anim = (el, kf, opts) => (!RM.matches && el.animate) ? el.animate(kf, opts) : null;
+const setF = (el, f) => el.style.setProperty("--f", Math.max(0, Math.min(1, f || 0)));
+const easeOut = k => 1 - Math.pow(1 - k, 3);
+function tween(el, to, fmt, o = {}) {
+  const dur = o.dur ?? 700, ease = o.ease || easeOut, final = o.final ?? fmt(to);
+  cancelAnimationFrame(el._tw);
+  const from = typeof el._cur === "number" ? el._cur : 0;
+  if (RM.matches || dur <= 0 || from === to) { el._cur = to; el.textContent = final; return; }
+  const t0 = performance.now();
+  const step = now => {
+    const k = Math.min(1, (now - t0) / dur);
+    el._cur = from + (to - from) * ease(k);
+    el.textContent = k < 1 ? fmt(el._cur) : final;
+    if (k < 1) el._tw = requestAnimationFrame(step);
+  };
+  el._tw = requestAnimationFrame(step);
+}
+
+/* ---------- tabs ---------- */
+const tabsNav = $("tabs"), tabInk = document.createElement("span");
+tabInk.className = "tab-ink";
+tabInk.setAttribute("aria-hidden", "true");
+tabsNav.prepend(tabInk);
+function placeInk() {
+  const b = tabsNav.querySelector('button[aria-selected="true"]');
+  tabInk.style.width = b.offsetWidth + "px";
+  tabInk.style.height = b.offsetHeight + "px";
+  tabInk.style.transform = `translate(${b.offsetLeft}px,${b.offsetTop}px)`;
+  tabsNav.classList.add("inked");
+}
+addEventListener("resize", placeInk);
+document.querySelectorAll("#tabs button").forEach(b => b.addEventListener("click", () => {
+  const was = document.querySelector(".scene:not([hidden])");
+  document.querySelectorAll("#tabs button").forEach(x => x.setAttribute("aria-selected", x === b));
+  document.querySelectorAll(".scene").forEach(s => s.hidden = s.id !== b.dataset.scene);
+  placeInk();
+  const now = $(b.dataset.scene);
+  if (now !== was) anim(now, [{opacity:0, transform:"translateY(14px)"}, {opacity:1, transform:"none"}], {duration:520, easing:OUT});
+}));
+
+/* ---------- static text, theme, language ---------- */
+function applyStatic() {
+  document.title = t("doc.title");
+  document.querySelectorAll("[data-t]").forEach(el => el.textContent = t(el.dataset.t));
+  document.querySelectorAll("[data-t-aria]").forEach(el => el.setAttribute("aria-label", t(el.dataset.tAria)));
+  $("lang-en").setAttribute("aria-pressed", lang === "en");
+  $("lang-fr").setAttribute("aria-pressed", lang === "fr");
+  themeLabel();
+}
+function themeLabel() {
+  const light = document.documentElement.dataset.theme === "light";
+  $("theme-label").textContent = t(light ? "theme.dark" : "theme.light");
+  $("theme-toggle").setAttribute("aria-label", t(light ? "theme.toDark" : "theme.toLight"));
+}
+$("theme-toggle").addEventListener("click", () => {
+  const next = document.documentElement.dataset.theme === "light" ? "dark" : "light";
+  const apply = () => { document.documentElement.dataset.theme = next; themeLabel(); };
+  if (!RM.matches && document.startViewTransition) document.startViewTransition(apply); else apply();
+  try { localStorage.setItem("mc-theme", next); } catch (e) {}
+});
+function setLocale(l) {
+  lang = l;
+  document.documentElement.lang = l;
+  PCT = new Intl.NumberFormat(LOC(), {style:"percent", maximumFractionDigits:0});
+}
+function switchLang(l) {
+  if (l === lang) return;
+  setLocale(l);
+  try { localStorage.setItem("mc-lang", l); } catch (e) {}
+  GEN++;
+  applyStatic();
+  viewers = viewers.filter(v => v.mount.isConnected);
+  viewers.forEach(v => v.relabel());
+  placeInk();
+  tResetAll();
+  hResetAll();
+  cResetAll();
+  xInit();
+  pInit();
+}
+$("lang-en").addEventListener("click", () => switchLang("en"));
+$("lang-fr").addEventListener("click", () => switchLang("fr"));
+setLocale(lang);
+applyStatic();
+placeInk();
+requestAnimationFrame(() => tabInk.classList.add("anim"));
+
+/* ---------- raw JSON viewer (shared by all scenes) ---------- */
+let viewers = [];
+function highlightJson(obj) {
+  const text = JSON.stringify(obj, null, 2);
+  const re = /("(?:\\.|[^"\\])*")(\s*:)?|\b(true|false|null)\b|-?\d+(?:\.\d+)?(?:[eE][+-]?\d+)?/g;
+  let out = "", last = 0, m;
+  while ((m = re.exec(text))) {
+    out += esc(text.slice(last, m.index));
+    if (m[1] !== undefined) out += `<span class="${m[2] ? "jk" : "js"}">${esc(m[1])}</span>${esc(m[2] || "")}`;
+    else if (m[3] !== undefined) out += `<span class="jb">${m[3]}</span>`;
+    else out += `<span class="jn">${m[0]}</span>`;
+    last = re.lastIndex;
+  }
+  return out + esc(text.slice(last));
+}
+function makeViewer(mount, hintKey) {
+  const pane = () => `<div class="pane"><div class="panehead"><span></span><button type="button" class="copy"></button></div><pre class="code"></pre></div>`;
+  mount.classList.add("raw");
+  mount.innerHTML = `<button type="button" class="rawtoggle raw-toggle" aria-expanded="false"></button>
+    <div class="rawbody" hidden>
+      <div class="rawtitle"></div>
+      <div class="rawtool"></div>
+      <div class="rawep mono"></div><div class="rawcap"></div>
+      <div class="rawpanes">${pane()}${pane()}</div>
+    </div>`;
+  const toggle = mount.querySelector(".rawtoggle"), body = mount.querySelector(".rawbody");
+  const ep = mount.querySelector(".rawep"), capEl = mount.querySelector(".rawcap");
+  const pres = mount.querySelectorAll("pre"), copies = mount.querySelectorAll(".copy"), heads = mount.querySelectorAll(".panehead span");
+  let cur = null, caption = "";
+  const render = () => {
+    if (body.hidden) return;
+    if (!cur) {
+      ep.textContent = "";
+      capEl.textContent = "";
+      pres.forEach(p => { p.className = "code empty"; p.textContent = t(hintKey || "raw.none"); });
+      return;
+    }
+    ep.textContent = cur.endpoint || "";
+    capEl.textContent = [caption, cur.note].filter(Boolean).join(". ");
+    pres[0].className = pres[1].className = "code";
+    pres[0].innerHTML = highlightJson(cur.request);
+    pres[1].innerHTML = highlightJson(cur.response);
+  };
+  const relabel = () => {
+    toggle.textContent = t(body.hidden ? "raw.show" : "raw.hide");
+    mount.querySelector(".rawtitle").textContent = t("raw.title");
+    heads[0].textContent = t("raw.sent");
+    heads[1].textContent = t("raw.recv");
+    copies.forEach(c => c.textContent = t("raw.copy"));
+    render();
+  };
+  toggle.addEventListener("click", () => {
+    body.hidden = !body.hidden;
+    toggle.setAttribute("aria-expanded", String(!body.hidden));
+    toggle.textContent = t(body.hidden ? "raw.show" : "raw.hide");
+    render();
+    if (!body.hidden) {
+      anim(body, [{opacity:0, transform:"translateY(-8px) scale(.985)"}, {opacity:1, transform:"none"}], {duration:420, easing:OUT});
+      body.querySelectorAll(".pane").forEach((p, k) => anim(p, [{opacity:0, transform:"translateY(10px)"}, {opacity:1, transform:"none"}], {duration:480, delay:80 + k * 70, easing:OUT, fill:"backwards"}));
+    }
+  });
+  copies.forEach((btn, k) => btn.addEventListener("click", async () => {
+    if (!cur) return;
+    try {
+      await navigator.clipboard.writeText(JSON.stringify(k ? cur.response : cur.request, null, 2));
+      btn.textContent = t("raw.copied");
+    } catch (e) { btn.textContent = t("raw.copyFail"); }
+    setTimeout(() => { btn.textContent = t("raw.copy"); }, 1200);
+  }));
+  relabel();
+  const v = {mount, relabel, toolbar: mount.querySelector(".rawtool"), set(raw, cp) { cur = raw || null; caption = cp || ""; render(); }};
+  viewers.push(v);
+  return v;
+}
+
+/* ================= Scene 1: Tsunami ================= */
+const T_TOTAL = 300, T_CATS = ["home","motor","electronics","health","travel","pets","other"];
+let tES = null, tTimer = null, tS = null, tPending = [], tRaf = 0;
+let tRaw = {}, tSel = null, tLastI = null, tCatRows = {};
+const tViewer = makeViewer($("t-raw"), "t.hint");
+const tNobody = () => `<li class="muted">${esc(t("t.nobody"))}</li>`;
+
+function tReset() {
+  tPending = [];
+  tRaw = {}; tSel = null; tLastI = null; tCatRows = {};
+  tS = {count:0, errors:0, tokens:0, lat:[], cats:{}, start:performance.now(), top:[], finished:false, secs:null};
+  T_CATS.forEach(c => tS.cats[c] = 0);
+  $("t-feed").innerHTML = "";
+  $("t-cats").innerHTML = "";
+  $("t-shame").innerHTML = tNobody();
+  $("t-human").hidden = true;
+  $("t-errbox").hidden = true;
+  showErr("t-err", "");
+  tViewer.set(null);
+  tRender();
+}
+function tCatRow(c) {
+  let r = tCatRows[c];
+  if (!r) {
+    const div = document.createElement("div");
+    div.className = "bar";
+    div.innerHTML = `<span>${esc(cap(L(c)))}</span><div class="track"><div class="fill"></div></div><span class="n"></span>`;
+    $("t-cats").appendChild(div);
+    r = tCatRows[c] = {fill: div.querySelector(".fill"), n: div.querySelector(".n")};
+  }
+  return r;
+}
+function tRender() {
+  const s = tS, elapsed = s.finished && s.secs != null ? s.secs : (performance.now() - s.start) / 1000;
+  $("t-done").textContent = nf(s.count);
+  $("t-done-l").textContent = t("t.done", {n: nf(T_TOTAL)});
+  setF($("t-prog"), s.count / T_TOTAL);
+  $("t-cps").textContent = elapsed > 0 ? nf(s.count / elapsed, 1) : "0";
+  $("t-time").textContent = nf(elapsed, 1) + NB + "s";
+  $("t-time-l").textContent = t(s.finished ? "t.total" : "t.elapsed");
+  $("t-cost").textContent = fmtCost(s.tokens);
+  $("t-med").textContent = s.lat.length ? nf(Math.round(median(s.lat))) + NB + "ms" : "-";
+  $("t-errs").textContent = nf(s.errors);
+  $("t-errbox").hidden = s.errors === 0;
+  const max = Math.max(1, ...Object.values(s.cats));
+  for (const c of Object.keys(s.cats)) {
+    const r = tCatRow(c);
+    setF(r.fill, s.cats[c] / max);
+    r.n.textContent = nf(s.cats[c]);
+  }
+}
+function tHumanLine() {
+  const s = tS, n = s.count;
+  if (!n) return;
+  const mins = n * 4, h = Math.floor(mins / 60), m = mins % 60;
+  const human = (h ? h + NB + "h " : "") + m + NB + "min";
+  const secs = s.secs != null ? s.secs : (performance.now() - s.start) / 1000;
+  const p = $("t-human");
+  p.hidden = false;
+  p.textContent = t("t.human", {h: human, n: nf(n), s: nf(secs, 1)});
+}
+function tCelebrate() {
+  anim($("t-sweep"), [{opacity:0, transform:"translateX(-100%)"}, {opacity:1, offset:.25}, {opacity:0, transform:"translateX(340%)"}], {duration:1200, easing:"cubic-bezier(.6,0,.2,1)"});
+  document.querySelectorAll("#t-counters .counter:not([hidden])").forEach((c, k) =>
+    anim(c, [{transform:"none"}, {transform:"translateY(-4px) scale(1.03)"}, {transform:"none"}], {duration:620, delay:k * 80, easing:"ease-out"}));
+  anim($("t-human"), [{transform:"scale(.98)", opacity:.6}, {transform:"scale(1.012)", opacity:1}, {transform:"none", opacity:1}], {duration:800, delay:500, easing:"ease-out"});
+}
+function tMarkSel() {
+  document.querySelectorAll("#t-feed li, #t-shame li").forEach(li => li.classList.toggle("sel", tSel !== null && li.dataset.i === String(tSel)));
+}
+function tShowRaw() {
+  tViewer.set(tSel !== null ? tRaw[tSel] : null, tSel !== null ? t("t.claimCap", {i: tSel}) : "");
+}
+function tFlush() {
+  tRaf = 0;
+  const s = tS;
+  if (tPending.length) {
+    const frag = document.createDocumentFragment();
+    for (let k = tPending.length - 1; k >= 0; k--) frag.appendChild(tPending[k]);
+    tPending = [];
+    const feed = $("t-feed");
+    feed.prepend(frag);
+    while (feed.children.length > 40) feed.lastChild.remove();
+    $("t-shame").innerHTML = s.top.length ? s.top.map(x => `<li data-i="${x.i}">${esc(x.claim)}<small>${esc(t("t.shameSmall", {cat: L(x.cat), p: pct(x.fraud)}))}</small></li>`).join("") : tNobody();
+    tMarkSel();
+  }
+  tRender();
+  tHumanLine();
+}
+function tAdd(d) {
+  const s = tS;
+  s.count++;
+  const li = document.createElement("li");
+  li.dataset.i = d.i;
+  if (d.error) {
+    s.errors++;
+    li.className = "lost in";
+    li.innerHTML = `<span class="tags"><span class="tag red">${esc(t("t.lost", {i: d.i}))}</span></span><span class="muted">${esc(d.error)}</span>`;
+  } else {
+    li.className = "in";
+    const a = d.answers || {};
+    const cat = a.category && a.category.choice || "other";
+    s.cats[cat] = (s.cats[cat] || 0) + 1;
+    s.tokens += d.tokens || 0;
+    s.lat.push(d.ms);
+    if (d.raw) { tRaw[d.i] = d.raw; tLastI = d.i; }
+    const fraud = noul(a.fraud);
+    const needsHuman = noul(a.human) >= 0.5;
+    li.innerHTML = `<span class="tags"><span class="tag">${esc(L(cat))}</span><span class="tag sev">${esc(sevLabel(a.severity))}</span>${needsHuman ? `<span class="tag red">${esc(t("t.needsHuman"))}</span>` : ""}</span>
+      <span>${esc(t("t.fraud"))} ${meter(fraud)}</span><span class="txt">${esc(d.claim)}</span>`;
+    s.top.push({i: d.i, claim: d.claim, fraud, cat});
+    s.top.sort((x, y) => y.fraud - x.fraud);
+    s.top.length = Math.min(5, s.top.length);
+  }
+  tPending.push(li);
+  if (!tRaf) tRaf = requestAnimationFrame(tFlush);
+}
+function tPick(ev) {
+  const li = ev.target.closest("li[data-i]");
+  if (!li || !(li.dataset.i in tRaw)) return;
+  tSel = Number(li.dataset.i);
+  tMarkSel();
+  tShowRaw();
+}
+$("t-feed").addEventListener("click", tPick);
+$("t-shame").addEventListener("click", tPick);
+function tStop() {
+  if (tES) tES.close();
+  tES = null;
+  clearInterval(tTimer);
+  $("t-go").disabled = false;
+  $("t-go").classList.remove("live");
+  $("t-live").hidden = true;
+  document.body.classList.remove("streaming");
+}
+function tResetAll() {
+  tStop();
+  cancelAnimationFrame(tRaf);
+  tRaf = 0;
+  tReset();
+}
+$("t-go").addEventListener("click", () => {
+  tStop();
+  tReset();
+  $("t-go").disabled = true;
+  $("t-go").classList.add("live");
+  $("t-live").hidden = false;
+  document.body.classList.add("streaming");
+  tTimer = setInterval(() => { if (!tS.finished) tRender(); }, 100);
+  const es = tES = new EventSource(`/api/tsunami?n=${T_TOTAL}&concurrency=20&lang=${lang}`);
+  es.onmessage = ev => {
+    if (es !== tES) return;
+    let d;
+    try { d = JSON.parse(ev.data); } catch (e) { return; }
+    if (d.done) {
+      tS.finished = true;
+      tS.secs = d.seconds;
+      tStop();
+      tFlush();
+      tCelebrate();
+      if (tSel === null && tLastI !== null) { tSel = tLastI; tMarkSel(); tShowRaw(); }
+      return;
+    }
+    tAdd(d);
+  };
+  es.onerror = () => {
+    if (es !== tES || tS.finished) return;
+    tStop();
+    showErr("t-err", t("t.broke", {n: nf(tS.count)}));
+  };
+});
+tReset();
+
+/* ================= Scene 2: Hotline ================= */
+const EXAMPLES = {
+  en: [
+    ["The cat and the laptop", "My cat pushed my laptop off the desk and into a full bathtub. The cat is fine. The laptop was my entire tax return."],
+    ["Parking lot", "A shopping trolley rolled across the car park and hit my car. I did not see who pushed it, but I saw the trolley smiling."],
+    ["Honest Dave", "I would like to report that my boat sank, in my garage, three days after I raised its insurance cover. Remarkable timing."],
+    ["Fully furious", "I have been on hold for six weeks. My roof is now a sunroof. If nobody calls me back today I am taking this to a lawyer."]
+  ],
+  fr: [
+    ["Le chat et l’ordinateur", "Mon chat a poussé mon ordinateur portable du bureau dans une baignoire pleine. Le chat va bien. L’ordinateur contenait toute ma déclaration d’impôts."],
+    ["Le parking", "Un caddie a traversé tout le parking et percuté ma voiture. Je n’ai pas vu qui l’a poussé, mais j’ai vu le caddie sourire."],
+    ["Ce brave Didier", "Je souhaite déclarer que mon bateau a coulé, dans mon garage, trois jours après que j’ai augmenté sa garantie. Drôle de coïncidence."],
+    ["Furieux, vraiment", "Cela fait six semaines que je suis en attente. Mon toit est devenu un toit ouvrant. Si personne ne me rappelle aujourd’hui, j’appelle mon avocat."]
+  ]
+};
+const NOULS = ["fraud", "human", "injury", "third_party", "urgent", "covered", "legal"];
+let hReq = 0, hTimer = null, hLast = null, hBuilt = false;
+const hViewer = makeViewer($("h-raw"), "h.hint");
+const hThink = on => { $("h-card").classList.toggle("thinking", on); $("h-answers-card").classList.toggle("thinking", on); };
+
+function hExamples() {
+  $("h-examples").innerHTML = "";
+  EXAMPLES[lang].forEach(([label, text]) => {
+    const b = document.createElement("button");
+    b.type = "button";
+    b.textContent = label;
+    b.addEventListener("click", () => { $("h-text").value = text; hFire(); });
+    $("h-examples").appendChild(b);
+  });
+}
+function hBlank() {
+  hLast = null; hBuilt = false;
+  $("h-answers").className = "muted";
+  $("h-answers").textContent = t("h.nothing");
+  cancelAnimationFrame($("h-ms")._tw);
+  $("h-ms")._cur = undefined;
+  $("h-ms").textContent = "-";
+  $("h-sub").textContent = t("h.waiting");
+  $("h-compare").hidden = true;
+  $("h-vs").innerHTML = "";
+  $("h-ratio").textContent = "";
+  showErr("h-err", "");
+  hThink(false);
+  hViewer.set(null);
+  hExamples();
+  $("h-text").value = EXAMPLES[lang][0][1];
+}
+function hResetAll() {
+  clearTimeout(hTimer);
+  ++hReq;
+  hBlank();
+  $("h-slow").disabled = false;
+  $("h-slow").textContent = t("h.slow");
+}
+function hBuild() {
+  const chip = k => `<div class="chipbox" data-k="${k}"><span class="muted">${esc(t("h." + k))}</span><div class="big"></div><small></small></div>`;
+  const gauge = k => `<div class="gauge" data-k="${k}"><div class="lab"><span>${esc(t("n." + k))}</span><span class="v"></span></div><div class="track"><div class="fill ${k === "covered" ? "" : "red"}"></div></div></div>`;
+  $("h-answers").className = "";
+  $("h-answers").innerHTML = `<div class="gauges mb">${chip("category")}
+    <div class="chipbox" data-k="severity"><span class="muted">${esc(t("h.severity"))}</span><div class="big"></div><div class="track" style="height:.6rem;margin:.3rem 0"><div class="fill red"></div></div><small></small></div>
+    ${chip("tone")}</div><div class="gauges">${NOULS.map(gauge).join("")}</div>`;
+  hBuilt = true;
+}
+function hRenderAnswers(a) {
+  if (!hBuilt) hBuild();
+  const q = k => $("h-answers").querySelector(`[data-k="${k}"]`);
+  for (const k of ["category", "tone"]) {
+    const c = a[k], box = q(k);
+    box.hidden = !c;
+    if (!c) continue;
+    box.querySelector(".big").textContent = cap(L(String(c.choice)));
+    box.querySelector("small").textContent = Object.entries(c.probabilities || {}).sort((x, y) => y[1] - x[1]).slice(0, 3).map(([n, v]) => `${L(n)} ${pct(v)}`).join(", ");
+  }
+  const sv = a.severity, sb = q("severity");
+  sb.hidden = !(sv && typeof sv.score === "number");
+  if (!sb.hidden) {
+    const levels = Object.keys(sv.legend || {}).length || 3;
+    sb.querySelector(".big").textContent = sevLabel(sv);
+    setF(sb.querySelector(".fill"), sv.score / (levels - 1));
+    sb.querySelector("small").textContent = t("h.score", {s: nf(sv.score, 2)}) + (typeof sv.confidence === "number" ? t("h.conf", {p: pct(sv.confidence)}) : "");
+  }
+  for (const k of NOULS) {
+    const p = noul(a[k]), g = q(k);
+    tween(g.querySelector(".v"), p, pct, {dur:650});
+    setF(g.querySelector(".fill"), p);
+  }
+}
+function hShowMs(d) {
+  const el = $("h-ms");
+  tween(el, d.ms, v => nf(Math.round(v)), {dur:600, final:nf(d.ms)});
+  anim(el.parentElement, [{transform:"translateY(.08em)", opacity:.5}, {transform:"none", opacity:1}], {duration:500, easing:OUT});
+  $("h-sub").textContent = t("h.sub", {c: nf(d.calls), tok: nf(d.tokens), cost: fmtCost(d.tokens)});
+}
+async function hCall(text, split) {
+  const r = await fetch("/api/hotline", {method:"POST", headers:{"Content-Type":"application/json"}, body:JSON.stringify({text, split, lang})});
+  if (!r.ok) throw await apiErr(r);
+  return r.json();
+}
+function hFire() {
+  clearTimeout(hTimer);
+  const text = $("h-text").value.trim();
+  if (!text) { hThink(false); return; }
+  const id = ++hReq;
+  hThink(true);
+  hCall(text, false).then(d => {
+    if (id !== hReq) return;
+    hThink(false);
+    showErr("h-err", "");
+    hLast = {text, d};
+    hShowMs(d);
+    hRenderAnswers(d.answers);
+    hViewer.set(d.raw, t("h.latest"));
+  }).catch(e => { if (id === hReq) { hThink(false); showErr("h-err", t("h.err", {m: e.message})); } });
+}
+function hRace(fast, slow) {
+  const rows = $("h-vs").querySelectorAll(".vs"), max = Math.max(fast.ms, slow.ms, 1), k = Math.min(1, 4000 / max);
+  [fast, slow].forEach((r, j) => {
+    const f = r.ms / max, bar = rows[j].querySelector(".lane i");
+    setF(bar, f);
+    anim(bar, [{transform:"scaleX(0)"}, {transform:`scaleX(${f})`}], {duration:r.ms * k, easing:"linear"});
+    tween(rows[j].querySelector("b"), r.ms, v => nf(Math.round(v)) + NB + "ms", {dur:r.ms * k, ease:x => x, final:nf(r.ms) + NB + "ms"});
+  });
+  anim($("h-ratio"), [{opacity:0, transform:"translateY(.6rem)"}, {opacity:1, transform:"none"}], {duration:550, delay:max * k + 150, easing:OUT, fill:"backwards"});
+}
+$("h-text").addEventListener("input", () => { clearTimeout(hTimer); hThink(true); hTimer = setTimeout(hFire, 250); });
+$("h-slow").addEventListener("click", async () => {
+  const text = $("h-text").value.trim();
+  if (!text) return;
+  clearTimeout(hTimer);
+  const btn = $("h-slow"), gen = GEN;
+  btn.disabled = true;
+  btn.textContent = t("h.slowing");
+  showErr("h-err", "");
+  ++hReq; // invalidate any pending debounced result
+  hThink(true);
+  try {
+    let fast = hLast && hLast.text === text ? hLast.d : await hCall(text, false);
+    if (gen !== GEN) return;
+    const slow = await hCall(text, true);
+    if (gen !== GEN) return;
+    hShowMs(fast);
+    hRenderAnswers(fast.answers);
+    hLast = {text, d: fast};
+    $("h-compare").hidden = false;
+    $("h-vs").innerHTML = `
+      <div class="vs"><b>0${NB}ms</b><div class="lane"><i></i></div><div class="meta">${esc(t("h.fastMeta", {c: nf(fast.calls)}))}<span class="mono">${esc(t("h.tok", {tok: nf(fast.tokens), cost: fmtCost(fast.tokens)}))}</span></div></div>
+      <div class="vs slow"><b>0${NB}ms</b><div class="lane"><i></i></div><div class="meta">${esc(t("h.slowMeta", {c: nf(slow.calls)}))}<span class="mono">${esc(t("h.tok", {tok: nf(slow.tokens), cost: fmtCost(slow.tokens)}))}</span></div></div>`;
+    const tr = fast.ms > 0 ? slow.ms / fast.ms : 0, cr = fast.tokens > 0 ? slow.tokens / fast.tokens : 0;
+    $("h-ratio").textContent = t("h.ratio", {t: nf(tr, 1), c: nf(cr, 1)});
+    hRace(fast, slow);
+    hViewer.set(slow.raw, t("h.slowCap"));
+  } catch (e) {
+    if (gen === GEN) showErr("h-err", t("h.slowErr", {m: e.message}));
+  } finally {
+    hThink(false);
+    btn.disabled = false;
+    btn.textContent = t("h.slow");
+  }
+});
+hBlank();
+hFire();
+
+/* ================= Scene 3: Consistency ================= */
+const C_N = 50, DECISIONS = ["approve", "deny", "human"];
+let cES = null, cS = null, cRaw = {}, cSel = "clear", cRaf = 0;
+const cViewer = makeViewer($("c-raw"), "c.hint");
+function cToolbar() {
+  cViewer.toolbar.innerHTML = `<div class="seg">${["clear", "murky"].map(k => `<button type="button" data-case="${k}" aria-pressed="${k === cSel}">${esc(t(k === "clear" ? "c.segClear" : "c.segMurky"))}</button>`).join("")}</div>`;
+}
+cToolbar();
+cViewer.toolbar.addEventListener("click", ev => {
+  const b = ev.target.closest("button[data-case]");
+  if (!b) return;
+  cSel = b.dataset.case;
+  cViewer.toolbar.querySelectorAll("button").forEach(x => x.setAttribute("aria-pressed", x === b));
+  cShowRaw();
+});
+function cShowRaw() { cViewer.set(cRaw[cSel], cRaw[cSel] ? t("c.lastCap", {c: t(cSel === "clear" ? "c.segClear" : "c.segMurky")}) : ""); }
+
+function cEmptyCase() { return {decisions:{approve:0, deny:0, human:0}, fraud:[], errors:0, text:"", seq:[]}; }
+function cPanel(id, title, st, note) {
+  const el = $(id);
+  if (!el.dataset.built) {
+    el.innerHTML = `<h3>${esc(title)}</h3><p class="claim" hidden></p>${note ? `<p class="joke">${esc(note)}</p>` : ""}
+      <div class="cells" aria-hidden="true">${"<i></i>".repeat(C_N)}</div>
+      <div class="bars">${DECISIONS.map(k => `<div class="bar" data-k="${k}"><span>${esc(L(k))}</span><div class="track"><div class="fill ${k === "deny" ? "red" : k === "human" ? "gray" : ""}"></div></div><span class="n"></span></div>`).join("")}</div>
+      <div class="headline"></div>
+      ${st.fraud ? '<div class="stats">' + ["c.min", "c.max", "c.spread"].map(l => `<div><b>-</b><span>${esc(t(l))}</span></div>`).join("") + "</div>" : ""}
+      <p class="muted fails" hidden></p>`;
+    el.dataset.built = "1";
+    el._n = 0;
+  }
+  const total = st.decisions.approve + st.decisions.deny + st.decisions.human;
+  const top = Math.max(0, ...Object.values(st.decisions));
+  const claim = el.querySelector(".claim");
+  claim.hidden = !st.text;
+  claim.textContent = st.text;
+  const cells = el.querySelectorAll(".cells i");
+  if ((el._n || 0) > st.seq.length) { cells.forEach(c => { c.className = ""; c.style.removeProperty("--r"); }); el._n = 0; }
+  for (let k = el._n || 0; k < st.seq.length && k < cells.length; k++) {
+    cells[k].className = "on c-" + st.seq[k];
+    if (st.chaos) cells[k].style.setProperty("--r", (Math.random() * 40 - 20).toFixed(1) + "deg");
+  }
+  el._n = Math.min(st.seq.length, cells.length);
+  DECISIONS.forEach(k => {
+    const row = el.querySelector(`[data-k="${k}"]`);
+    setF(row.querySelector(".fill"), total ? st.decisions[k] / total : 0);
+    row.querySelector(".n").textContent = nf(st.decisions[k]);
+  });
+  const hl = el.querySelector(".headline");
+  hl.textContent = total ? (top === total ? t("c.identical", {n: nf(total)}) : t("c.agree", {a: nf(top), n: nf(total)})) : t("c.waiting");
+  hl.classList.toggle("unanimous", total > 0 && top === total);
+  if (st.fraud) {
+    const bs = el.querySelectorAll(".stats b");
+    if (st.fraud.length) {
+      const mn = Math.min(...st.fraud), mx = Math.max(...st.fraud);
+      bs[0].textContent = pct(mn);
+      bs[1].textContent = pct(mx);
+      bs[2].textContent = t("c.pts", {v: nf((mx - mn) * 100, 1)});
+    } else bs.forEach(b => b.textContent = "-");
+  }
+  const f = el.querySelector(".fails");
+  f.hidden = !st.errors;
+  f.textContent = t("c.fails", {n: nf(st.errors)});
+}
+function cRender() {
+  if (!cRaf) cRaf = requestAnimationFrame(cDraw);
+}
+function cDraw() {
+  cRaf = 0;
+  cPanel("c-clear", t("c.clear"), cS.clear);
+  cPanel("c-murky", t("c.murky"), cS.murky);
+  cPanel("c-gerald", t("c.gerald"), cS.gerald, t("c.joke"));
+}
+function cReset() {
+  cS = {clear:cEmptyCase(), murky:cEmptyCase(), gerald:{decisions:{approve:0, deny:0, human:0}, errors:0, seq:[], chaos:true, text:t("c.geraldText")}, got:0};
+  cRaw = {};
+  cShowRaw();
+  $("c-prog").textContent = "";
+  showErr("c-err", "");
+  cRender();
+}
+function cStop() { if (cES) cES.close(); cES = null; $("c-go").disabled = false; $("c-go").classList.remove("live"); document.body.classList.remove("streaming"); }
+function cResetAll() {
+  cStop();
+  ["c-clear", "c-murky", "c-gerald"].forEach(id => { delete $(id).dataset.built; });
+  cToolbar();
+  cReset();
+}
+$("c-go").addEventListener("click", () => {
+  cStop();
+  cReset();
+  $("c-go").disabled = true;
+  $("c-go").classList.add("live");
+  document.body.classList.add("streaming");
+  let finished = false;
+  const es = cES = new EventSource(`/api/consistency?n=${C_N}&lang=${lang}`);
+  es.onmessage = ev => {
+    if (es !== cES) return;
+    let d;
+    try { d = JSON.parse(ev.data); } catch (e) { return; }
+    if (d.cases) { cS.clear.text = d.cases.clear; cS.murky.text = d.cases.murky; cRender(); return; }
+    if (d.done) { finished = true; cStop(); cDraw(); $("c-prog").textContent = t("c.finished", {s: nf(d.seconds)}); return; }
+    const st = cS[d.case];
+    if (!st) return;
+    if (d.error || !d.answers) { st.errors++; st.seq.push("err"); cRender(); return; }
+    const dec = d.answers.decision && d.answers.decision.choice;
+    if (dec in st.decisions) st.decisions[dec]++;
+    st.seq.push(dec in st.decisions ? dec : "other");
+    st.fraud.push(noul(d.answers.fraud));
+    if (d.raw) { cRaw[d.case] = d.raw; if (d.case === cSel) cShowRaw(); }
+    if (d.case === "murky") {
+      const g = DECISIONS[Math.floor(Math.random() * 3)];
+      cS.gerald.decisions[g]++;
+      cS.gerald.seq.push(g);
+    }
+    cS.got++;
+    $("c-prog").textContent = t("c.received", {n: nf(cS.got)});
+    cRender();
+  };
+  es.onerror = () => {
+    if (es !== cES || finished) return;
+    cStop();
+    showErr("c-err", t("c.broke", {n: nf(cS.got)}));
+  };
+});
+cReset();
+
+/* ---------- box overlay shared by scene 4 and the Box card ---------- */
+function drawBox(exh, box, label) {
+  const b = document.createElement("div");
+  const full = box.top < 0.1 && box.bottom > 0.9;
+  b.className = "bbox" + (full ? " inside" : box.top < 0.1 ? " below" : "") + (box.left > 0.55 ? " right" : "");
+  b.style.cssText = `top:${box.top * 100}%;left:${box.left * 100}%;width:${(box.right - box.left) * 100}%;height:${(box.bottom - box.top) * 100}%`;
+  const s = document.createElement("span");
+  s.textContent = label;
+  b.appendChild(s);
+  exh.appendChild(b);
+}
+
+/* ================= Scene 4: Sushi ================= */
+let xEx = [], xGen = 0;
+const xLetter = i => String.fromCharCode(65 + i);
+function xPlaceholder() {
+  $("x-grid").innerHTML = `<div class="placeholder"><b>${esc(t("x.waitTitle"))}</b><p>${esc(t("x.waitBody"))}</p></div>`;
+}
+async function xInit() {
+  const g = ++xGen;
+  xEx = [];
+  $("x-all").disabled = true;
+  showErr("x-err", "");
+  $("x-grid").innerHTML = `<span class="muted">${esc(t("x.fetching"))}</span>`;
+  try {
+    const r = await fetch("/api/sushi/photos");
+    if (!r.ok) throw new Error(t("server", {s: r.status}));
+    const {count} = await r.json();
+    if (g !== xGen) return;
+    if (!count) { xPlaceholder(); return; }
+    $("x-grid").innerHTML = "";
+    for (let i = 0; i < count; i++) xBuild(i);
+    $("x-all").disabled = false;
+  } catch (e) {
+    if (g !== xGen) return;
+    $("x-grid").innerHTML = "";
+    showErr("x-err", t("x.listErr", {m: e.message}));
+  }
+}
+function xBuild(i) {
+  const sheet = document.createElement("div");
+  sheet.className = "sheet";
+  sheet.style.flex = "1 1 340px";
+  const name = esc(t("x.exhibit", {l: xLetter(i)}));
+  sheet.innerHTML = `<h3>${name}</h3>
+    <div class="xbody">
+      <div class="exhibit" style="flex:0 0 auto"><img alt="${name}" src="/api/sushi/photo/${i}"><div class="scan" aria-hidden="true"><i></i></div></div>
+      <div class="xres">
+        <button class="btn">${esc(t("x.examine"))}</button>
+        <div class="err" hidden></div>
+        <div class="out muted" style="margin-top:.9rem">${esc(t("x.notYet"))}</div>
+      </div>
+    </div>
+    <div class="rawmount"></div>`;
+  $("x-grid").appendChild(sheet);
+  const ex = {sheet, btn: sheet.querySelector("button"), exh: sheet.querySelector(".exhibit"), err: sheet.querySelector(".err"), out: sheet.querySelector(".out"),
+              viewer: makeViewer(sheet.querySelector(".rawmount"), "x.hint")};
+  ex.btn.addEventListener("click", () => xExamine(i));
+  xEx[i] = ex;
+}
+async function xExamine(i) {
+  const ex = xEx[i];
+  ex.btn.disabled = true;
+  ex.err.hidden = true;
+  ex.out.className = "out muted pending";
+  ex.out.textContent = t("x.examining");
+  const old = ex.exh.querySelector(".bbox");
+  if (old) old.remove();
+  ex.exh.classList.add("scanning");
+  try {
+    const r = await fetch(`/api/sushi/${i}?lang=${lang}`);
+    if (!r.ok) throw await apiErr(r);
+    const d = await r.json();
+    ex.exh.classList.remove("scanning");
+    const a = d.answers || {};
+    const p = noul(a.eating_sushi);
+    const denied = p >= 0.5;
+    const box = a.sushi_box && a.sushi_box.box;
+    if (denied && box) {
+      const c = a.sushi_box.confidence;
+      drawBox(ex.exh, box, t("x.sushi") + (typeof c === "number" ? " " + pct(c) : ""));
+    }
+    const f = a.food || {};
+    const foods = Object.entries(f.probabilities || {}).sort((x, y) => y[1] - x[1]).map(([k, v], j) =>
+      `<div class="bar"><span>${esc(L(k))}</span><div class="track"><div class="fill grow ${k === f.choice ? "" : "gray"}" style="--f:${v};animation-delay:${(.25 + j * .08).toFixed(2)}s"></div></div><span class="n">${pct(v)}</span></div>`).join("");
+    const sk = a.sick;
+    ex.out.className = "out";
+    ex.out.innerHTML = `
+      <div class="dial"><span class="dv">0%</span><small>${esc(t("x.chance"))}</small></div>
+      <div class="track" style="height:1rem;margin:.5rem 0 1rem"><div class="fill red grow" style="--f:${p}"></div></div>
+      <h3>${esc(t("x.plate"))}</h3><div class="bars" style="margin-bottom:.8rem">${foods || `<span class="muted">${esc(t("x.noFood"))}</span>`}</div>
+      <p><b>${esc(t("x.health"))}</b> ${esc(sevLabel(sk))}${sk && typeof sk.score === "number" ? esc(t("x.score", {s: nf(sk.score, 2)})) : ""}</p>
+      <p class="mono"><b style="font-family:var(--sans)">${esc(t("x.time"))}</b> ${esc(t("x.timeV", {ms: nf(d.ms), tok: nf(d.tokens), cost: fmtCost(d.tokens || 0)}))}</p>
+      <div class="stamp ${denied ? "" : "ok"}">${esc(t(denied ? "x.denied" : "x.ok"))}</div>`;
+    tween(ex.out.querySelector(".dv"), p, pct, {dur:1000});
+    if (denied) anim(ex.sheet, [{transform:"none"}, {transform:"translate(-6px,3px)"}, {transform:"translate(5px,-3px)"}, {transform:"translate(-3px,2px)"}, {transform:"translate(2px,-1px)"}, {transform:"none"}], {duration:420, delay:1300, easing:"ease-out"});
+    ex.viewer.set(d.raw, t("x.exhibit", {l: xLetter(i)}));
+  } catch (e) {
+    ex.out.className = "out muted";
+    ex.out.textContent = t("x.noFindings");
+    ex.err.textContent = t("x.failed", {m: e.message});
+    ex.err.hidden = false;
+  } finally {
+    ex.exh.classList.remove("scanning");
+    ex.btn.disabled = false;
+  }
+}
+$("x-all").addEventListener("click", async () => {
+  $("x-all").disabled = true;
+  await Promise.all(xEx.map((_, i) => xExamine(i)));
+  $("x-all").disabled = false;
+});
+xInit();
+
+/* ================= Start here: the four question types ================= */
+const P_ORDER = ["noul", "choice", "score", "box"];
+const P_NAME = {noul:"Noul", choice:"Choice", score:"Score", box:"Box"};
+let pCards = {}, pGen = 0;
+const pCode = s => esc(s).replace(/`([^`]+)`/g, "<code>$1</code>");
+async function pInit() {
+  const g = ++pGen;
+  pCards = {};
+  $("p-all").disabled = true;
+  showErr("p-err", "");
+  $("p-grid").innerHTML = `<span class="muted">${esc(t("home.loading"))}</span>`;
+  try {
+    const r = await fetch(`/api/primitives?lang=${lang}`);
+    if (!r.ok) throw new Error(t("server", {s: r.status}));
+    const list = await r.json();
+    if (g !== pGen) return;
+    list.sort((a, b) => P_ORDER.indexOf(a.kind) - P_ORDER.indexOf(b.kind));
+    $("p-grid").innerHTML = "";
+    list.forEach(pBuild);
+    $("p-all").disabled = !list.length;
+  } catch (e) {
+    if (g !== pGen) return;
+    $("p-grid").innerHTML = "";
+    showErr("p-err", t("home.loadErr", {m: e.message}));
+  }
+}
+function pBuild(ex) {
+  const q = ex.question || {}, name = P_NAME[ex.kind] || cap(String(ex.kind));
+  let opts = "";
+  if (q.criteria && !Array.isArray(q.criteria)) opts = `<div class="opts">${Object.keys(q.criteria).map(k => `<span class="tag">${esc(L(k))}</span>`).join("")}</div>`;
+  else if (Array.isArray(q.criteria)) opts = `<ol class="levels" start="0">${q.criteria.map(l => `<li>${esc(l)}</li>`).join("")}</ol>`;
+  const input = ex.photo != null
+    ? `<div class="exhibit"><img alt="${esc(t("p.photoAlt"))}" src="/api/sushi/photo/${esc(ex.photo)}"><div class="scan" aria-hidden="true"><i></i></div></div><p class="muted hint" hidden>${esc(t("p.noPhoto"))}</p>`
+    : `<p class="pclaim">${esc(ex.claim == null ? "" : ex.claim)}</p>`;
+  const card = document.createElement("div");
+  card.className = "sheet pcard";
+  card.innerHTML = `<div class="phead"><div class="ptype">${esc(name)}</div><button class="btn" id="p-run-${esc(ex.kind)}">${esc(t("p.run"))}</button></div>
+    <p class="pdesc">${esc(t("p." + ex.kind))}</p>
+    <div class="plabel">${esc(t("p.input"))}</div>${input}
+    <div class="plabel">${esc(t("p.question"))}</div><p class="pq">${pCode(q.instructions || "")}</p>${opts}
+    <div class="err" hidden></div>
+    <div class="pout muted">${esc(t("p.notRun"))}</div>
+    <div class="pmeta mono"></div>
+    <div class="rawmount"></div>`;
+  $("p-grid").appendChild(card);
+  const c = {kind: ex.kind, name, q, card, btn: card.querySelector(".btn"), err: card.querySelector(".err"), out: card.querySelector(".pout"), meta: card.querySelector(".pmeta"),
+             exh: card.querySelector(".exhibit"), viewer: makeViewer(card.querySelector(".rawmount"), "p.hint")};
+  if (c.exh) c.exh.querySelector("img").addEventListener("error", () => { c.exh.hidden = true; card.querySelector(".hint").hidden = false; });
+  c.btn.addEventListener("click", () => pRun(ex.kind));
+  pCards[ex.kind] = c;
+}
+function pShow(c, a) {
+  const tp = a.type || c.kind;
+  if (tp === "noul") {
+    const p = noul(a);
+    c.out.innerHTML = `<div class="dial"><span class="dv">0%</span><small>${esc(t("p.yes"))}</small></div>
+      <div class="track" style="height:1.1rem;margin-top:.5rem"><div class="fill grow" style="--f:${p}"></div></div>`;
+    tween(c.out.querySelector(".dv"), p, pct, {dur:1000});
+  } else if (tp === "choice") {
+    const probs = Object.entries(a.probabilities || {}).sort((x, y) => y[1] - x[1]);
+    c.out.innerHTML = `<div class="pick">${esc(cap(L(String(a.choice))))}${typeof a.confidence === "number" ? `<small>${esc(t("p.conf", {p: pct(a.confidence)}))}</small>` : ""}</div>
+      <div class="bars">${probs.map(([k, v], j) => `<div class="bar"><span>${esc(L(k))}</span><div class="track"><div class="fill grow ${k === a.choice ? "" : "gray"}" style="--f:${v};animation-delay:${(j * .08).toFixed(2)}s"></div></div><span class="n">${pct(v)}</span></div>`).join("")}</div>`;
+  } else if (tp === "score") {
+    const keys = a.legend ? Object.keys(a.legend).sort((x, y) => x - y) : (Array.isArray(c.q.criteria) ? c.q.criteria.map((_, k) => String(k)) : []);
+    const label = k => a.legend ? a.legend[k] : c.q.criteria[k];
+    const n = Math.max(2, keys.length), score = typeof a.score === "number" ? a.score : 0;
+    const probs = a.probabilities || {};
+    c.out.innerHTML = `<div class="pick"><span class="dv">0</span><small>${esc(t("p.score2", {l: sevLabel(a)}))}${typeof a.confidence === "number" ? ", " + esc(t("p.conf", {p: pct(a.confidence)})) : ""}</small></div>
+      <div class="scale"><div class="rail"></div><div class="mkwrap" style="--x:${Math.max(0, Math.min(1, score / (n - 1)))}"><i class="mk"></i></div></div>
+      <div class="ticks">${keys.map(k => `<div><b>${esc(k)}${typeof probs[k] === "number" ? " · " + esc(pct(probs[k])) : ""}</b>${esc(label(k))}</div>`).join("")}</div>`;
+    tween(c.out.querySelector(".dv"), score, v => nf(v, 2), {dur:1100});
+  } else if (tp === "box") {
+    const box = a.box, conf = a.confidence;
+    if (box && c.exh) drawBox(c.exh, box, typeof conf === "number" ? t("p.conf", {p: pct(conf)}) : t("p.box2"));
+    c.out.innerHTML = box
+      ? `${typeof conf === "number" ? `<div class="dial"><span class="dv">0%</span><small>${esc(t("p.confidence"))}</small></div>` : ""}
+         <p class="mono" style="margin:.4rem 0 0">${esc(t("p.tb", {t: nf(box.top, 2), b: nf(box.bottom, 2)}))}<br>${esc(t("p.lr", {l: nf(box.left, 2), r: nf(box.right, 2)}))}</p>`
+      : `<p class="muted">${esc(t("p.noBox"))}</p>`;
+    const dv = c.out.querySelector(".dv");
+    if (dv) tween(dv, conf, pct, {dur:1000});
+  } else {
+    c.out.innerHTML = `<pre class="code">${highlightJson(a)}</pre>`;
+  }
+}
+async function pRun(kind) {
+  const c = pCards[kind];
+  c.btn.disabled = true;
+  c.err.hidden = true;
+  c.out.className = "pout muted pending";
+  c.out.textContent = t("p.asking");
+  c.meta.textContent = "";
+  const old = c.card.querySelector(".bbox");
+  if (old) old.remove();
+  if (c.exh) c.exh.classList.add("scanning");
+  try {
+    const r = await fetch(`/api/primitive/${encodeURIComponent(kind)}?lang=${lang}`);
+    if (!r.ok) throw await apiErr(r);
+    const d = await r.json();
+    if (c.exh) c.exh.classList.remove("scanning");
+    c.out.className = "pout";
+    pShow(c, d.answer || {});
+    c.meta.textContent = t("p.meta", {ms: nf(d.ms), tok: nf(d.tokens), cost: fmtCost(d.tokens || 0)});
+    anim(c.meta, [{opacity:0, transform:"translateY(.4rem)"}, {opacity:1, transform:"none"}], {duration:450, delay:600, easing:OUT, fill:"backwards"});
+    c.viewer.set(d.raw, t("p.caption", {n: c.name}));
+  } catch (e) {
+    c.out.className = "pout muted";
+    c.out.textContent = t("p.noAnswer");
+    c.err.textContent = t("p.failed", {m: e.message});
+    c.err.hidden = false;
+  } finally {
+    if (c.exh) c.exh.classList.remove("scanning");
+    c.btn.disabled = false;
+  }
+}
+$("p-all").addEventListener("click", async () => {
+  $("p-all").disabled = true;
+  await Promise.all(Object.keys(pCards).map(pRun));
+  $("p-all").disabled = false;
+});
+document.querySelectorAll(".goto").forEach(g => g.addEventListener("click", () => {
+  document.querySelector(`#tabs button[data-scene="${g.dataset.goto}"]`).click();
+  scrollTo({top: 0, behavior: RM.matches ? "auto" : "smooth"});
+}));
+pInit();
+</script>
+</body>
+</html>
